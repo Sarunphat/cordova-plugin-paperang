@@ -11,7 +11,7 @@
         NSString* appKey = [command.arguments objectAtIndex:1];
         NSString* appSecret = [command.arguments objectAtIndex:2];
 
-        if (appId != nil && [appId length] > 0) {
+        if (appId != nil) {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:appId];
         } else {
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
