@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-paperang" version="0.0.1">
+    <name>Paperang</name>
+    <description>Cordova Paperang Plugin</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,paperang</keywords>
+    <js-module src="www/paperang.js" name="paperang">
+        <clobbers target="paperang" />
+    </js-module>
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Paperang">
+                <param name="ios-package" value="Paperang"/>
+            </feature>
+        </config-file>
+        <header-file src="src/ios/Paperang.h" />
+        <source-file src="src/ios/Paperang.m" />
+    </platform>
+</plugin>
