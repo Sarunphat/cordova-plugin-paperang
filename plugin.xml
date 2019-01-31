@@ -12,6 +12,7 @@
         <config-file target="config.xml" parent="/*">
             <feature name="Paperang">
                 <param name="ios-package" value="Paperang"/>
+                <param name="onload" value="true" />
             </feature>
         </config-file>
         <header-file src="src/ios/Paperang.h" />
