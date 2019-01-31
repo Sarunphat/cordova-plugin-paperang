@@ -3,7 +3,7 @@ var PaperangAPI = {
         cordova.exec(
             successCallback,
             errorCallback,
-            "PaperangCordova",
+            "Paperang",
             "register",
             [appId, appKey, appSecret]
         );
@@ -12,7 +12,7 @@ var PaperangAPI = {
         cordova.exec(
             successCallback,
             errorCallback,
-            "PaperangCordova",
+            "Paperang",
             "scan"
         );
     }
