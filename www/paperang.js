@@ -17,3 +17,5 @@ var PaperangAPI = {
         );
     }
 }
+
+console.log("cordova-plugin-paperang is loaded.");
