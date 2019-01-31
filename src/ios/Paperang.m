@@ -5,6 +5,7 @@
 
 - (void)register:(CDVInvokedUrlCommand*)command
 {
+    NSLog(@"Register is called in iOS platform.");
     [self.commandDelegate runInBackground:^{
         CDVPluginResult* pluginResult = nil;
         NSNumber* appId = [command.arguments objectAtIndex:0];
