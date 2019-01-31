@@ -7,7 +7,7 @@
 {
     [self.commandDelegate runInBackground:^{
         CDVPluginResult* pluginResult = nil;
-        NSInteger* appId = [command.arguments objectAtIndex:0];
+        NSNumber* appId = [command.arguments objectAtIndex:0];
         NSString* appKey = [command.arguments objectAtIndex:1];
         NSString* appSecret = [command.arguments objectAtIndex:2];
 
