@@ -1,4 +1,4 @@
-var paperang = {
+window.PaperangAPI = {
     register: (appId, appKey, appSecret, successCallback, errorCallback) => {
         cordova.exec(
             successCallback,
