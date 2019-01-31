@@ -1,0 +1,29 @@
+{
+  "name": "cordova-plugin-paperang",
+  "version": "0.0.1",
+  "description": "This plugin allows Cordova app to use Paperang API.",
+  "cordova": {
+    "id": "cordova-plugin-paperang",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sarunphat/cordova-plugin-paperang.git"
+  },
+  "keywords": [
+    "Paperang",
+    "iOS",
+    "Android",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "Sarunphat Pisutvimol",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Sarunphat/cordova-plugin-paperang/issues"
+  },
+  "homepage": "https://github.com/Sarunphat/cordova-plugin-paperang#readme"
+}
