@@ -10,14 +10,17 @@
     </js-module>
     <platform name="ios">
         <hook type="after_platform_add" src="hooks/embedframework/addEmbedded.js" />
+            
         <config-file target="config.xml" parent="/*">
             <feature name="Paperang">
                 <param name="ios-package" value="Paperang"/>
                 <param name="onload" value="true" />
             </feature>
         </config-file>
+            
         <header-file src="src/ios/Paperang.h" />
         <source-file src="src/ios/Paperang.m" />
-        <framework src="src/ios/MMApi.framework" embed="true" />
+            
+        <framework src="src/ios/MMApi.framework" custom="true" />
     </platform>
 </plugin>
