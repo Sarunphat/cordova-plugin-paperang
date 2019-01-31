@@ -1,11 +1,11 @@
 window.PaperangAPI = {
-    register: (appId, appKey, appSecret, successCallback, errorCallback) => {
+    register: (appId, appKey, appSecret, base64Image, successCallback, errorCallback) => {
         cordova.exec(
             successCallback,
             errorCallback,
             "Paperang",
             "register",
-            [appId, appKey, appSecret]
+            [appId, appKey, appSecret, base64Image]
         );
     },
     scan: (successCallback, errorCallback) => {
