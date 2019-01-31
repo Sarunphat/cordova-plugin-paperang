@@ -19,6 +19,7 @@
         NSString* appSecret = [command.arguments objectAtIndex:2];
 
         NSString* base64Image = [command.arguments objectAtIndex:3];
+        NSLog(@"%@ %@ %@", appId, appKey, appSecret);
         [MMSharePrint registWithAppID:[appId longValue]
             AppKey: appKey
             andSecret: appSecret
