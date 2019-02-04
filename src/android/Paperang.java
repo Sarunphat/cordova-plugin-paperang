@@ -1,5 +1,7 @@
 package com.mfec.paperang;
 
+import android.Manifest;
+
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
 
