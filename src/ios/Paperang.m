@@ -49,7 +49,7 @@
 	CBPeripheral *pri = dic[@"peripheral"];
 	NSLog(@"Peripheral: %@", pri);
 	//replace @"00:15:83:BD:8A:D8" with your device mac
-	if ([dic[@"MAC"] isEqualToString:@"00:15:83:CA:31:DC"]) {
+	if ([dic[@"MAC"] isEqualToString:@"00:15:83:E3:B3:0F"]) {
 		[MMSharePrint connectPeripheral:pri];
 	}
 }
