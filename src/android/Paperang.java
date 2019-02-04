@@ -18,7 +18,7 @@ public class Paperang extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("register")) {
-            Long appId = args.getInt(0);
+            Long appId = args.getLong(0);
             String appKey = args.getString(1);
             String appSecret = args.getString(2);
 
