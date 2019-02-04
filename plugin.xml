@@ -23,4 +23,20 @@
             
         <framework src="src/ios/MMApi.framework" custom="true" />
     </platform>
+    <platform name="android">
+        <config-file target="config.xml" parent="/*">
+            <feature name="Paperang">
+                <param name="android-package" value="com.mfec.paperang.Paperang" />
+                <param name="onload" value="true" />
+            </feature>
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.BLUETOOTH" />
+            <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        
+        <source-file src="src/android/Paperang.java" target-dir="src/com/mfec/paperang" />
+    </platform>
 </plugin>

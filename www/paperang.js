@@ -1,11 +1,11 @@
 window.PaperangAPI = {
-    register: (appId, appKey, appSecret, base64Image, successCallback, errorCallback) => {
+    register: (appId, appKey, appSecret, successCallback, errorCallback) => {
         cordova.exec(
             successCallback,
             errorCallback,
             "Paperang",
             "register",
-            [appId, appKey, appSecret, base64Image]
+            [appId, appKey, appSecret]
         );
     },
     scan: (successCallback, errorCallback) => {
@@ -15,7 +15,31 @@ window.PaperangAPI = {
             "Paperang",
             "scan"
         );
+    },
+    connect: (macAddress, successCallback, errorCallback) => {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            "Paperang",
+            "connect"
+            [macAddress]
+        );
+    },
+    disconnect: (successCallback, errorCallback) => {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            "Paperang",
+            "disconnect"
+        );
+    },
+    print: (base64Image, successCallback, errorCallback) => {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            "Paperang",
+            "print"
+            [base64Image]
+        );
     }
 }
-
-console.log("cordova-plugin-paperang is loaded.");
