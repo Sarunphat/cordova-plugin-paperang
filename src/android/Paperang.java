@@ -23,15 +23,14 @@ public class Paperang extends CordovaPlugin {
             Long appId = args.getLong(0);
             String appKey = args.getString(1);
             String appSecret = args.getString(2);
-
-            String base64Image = args.getString(3);
-            this.register(appId, appKey, appSecret, base64Image, callbackContext);
+            
+            this.register(appId, appKey, appSecret, callbackContext);
             return true;
         }
         return false;
     }
 
-    private void register(Long appId, String appKey, String appSecret, String base64Image, CallbackContext callbackContext) {
+    private void register(Long appId, String appKey, String appSecret, CallbackContext callbackContext) {
         if (appId != null) {
             callbackContext.success("" + appId + " " + appKey + " " + appSecret);
         } else {
