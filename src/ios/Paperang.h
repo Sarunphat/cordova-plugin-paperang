@@ -4,5 +4,7 @@
 
 - (void)register:(CDVInvokedUrlCommand*) command;
 - (void)scan:(CDVInvokedUrlCommand*) command;
+- (void)cennect:(CDVInvokedUrlCommand*) command;
+- (void)disconnect:(CDInvokedUrlCommand*) command;
 
 @end
