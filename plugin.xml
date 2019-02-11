@@ -49,6 +49,8 @@
         <resource-file src="src/android/jniLibs/x86/libalf_h_sdkcore.so" target="jniLibs/x86/libalf_h_sdkcore.so" />
         <resource-file src="src/android/jniLibs/x86/libimg_proc_sdkcore.so" target="jniLibs/x86/libimg_proc_sdkcore.so" />
         
+        <resource-file src="src/android/paperang_printcore_1_0_8.jar" target-dir="libs/paperang_printcore_1_0_8.jar" />
+
         <source-file src="src/android/Paperang.java" target-dir="src/com/mfec/paperang" />
     </platform>
 </plugin>
