@@ -8,6 +8,11 @@
     <js-module src="www/paperang.js" name="paperang">
         <clobbers target="paperang" />
     </js-module>
+
+    <preference name="PAPERANG_AppId" />
+    <preference name="PAPERANG_AppKey" />
+    <preference name="PAPERANG_AppSecret" />
+
     <platform name="ios">
         <hook type="after_platform_add" src="hooks/embedframework/addEmbedded.js" />
             
@@ -23,6 +28,7 @@
             
         <framework src="src/ios/MMApi.framework" custom="true" />
     </platform>
+    
     <platform name="android">
         <config-file target="config.xml" parent="/*">
             <feature name="Paperang">
@@ -35,6 +41,9 @@
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.INTERNET" />
+            <meta-data android:name="PAPERANG_AppId" android:value="$PAPERANG_AppId" />
+            <meta-data android:name="PAPERANG_AppKey" android:value="$PAPERANG_AppKey" />
+            <meta-data android:name="PAPERANG_AppSecret" android:value="$PAPERANG_AppSecret" />
         </config-file>
 
         <framework src="com.google.code.gson:gson:2.8.5" />

@@ -38,7 +38,7 @@ public class Paperang extends CordovaPlugin {
 
     private void register(Long appId, String appKey, String appSecret, CallbackContext callbackContext) {
         if (appId != null) {
-
+            
             callbackContext.success("" + appId + " " + appKey + " " + appSecret);
         } else {
             callbackContext.error("Parameter(s) is missing.");
