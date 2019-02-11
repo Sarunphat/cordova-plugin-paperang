@@ -22,6 +22,16 @@
                 <param name="onload" value="true" />
             </feature>
         </config-file>
+
+        <config-file target="*-Info.plist" parent="PAPERANG_AppId">
+            <string>$APP_ID</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="PAPERANG_AppKey">
+            <string>$APP_KEY</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="PAPERANG_AppSecret">
+            <string>$APP_SECRET</string>
+        </config-file>
             
         <header-file src="src/ios/Paperang.h" />
         <source-file src="src/ios/Paperang.m" />
