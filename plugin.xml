@@ -9,9 +9,9 @@
         <clobbers target="paperang" />
     </js-module>
 
-    <preference name="PAPERANG_AppId" />
-    <preference name="PAPERANG_AppKey" />
-    <preference name="PAPERANG_AppSecret" />
+    <preference name="APP_ID" />
+    <preference name="APP_KEY" />
+    <preference name="APP_SECRET" />
 
     <platform name="ios">
         <hook type="after_platform_add" src="hooks/embedframework/addEmbedded.js" />
@@ -41,9 +41,9 @@
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.INTERNET" />
-            <meta-data android:name="PAPERANG_AppId" android:value="$PAPERANG_AppId" />
-            <meta-data android:name="PAPERANG_AppKey" android:value="$PAPERANG_AppKey" />
-            <meta-data android:name="PAPERANG_AppSecret" android:value="$PAPERANG_AppSecret" />
+            <meta-data android:name="PAPERANG_AppId" android:value="$APP_ID" />
+            <meta-data android:name="PAPERANG_AppKey" android:value="$APP_KEY" />
+            <meta-data android:name="PAPERANG_AppSecret" android:value="$APP_SECRET" />
         </config-file>
 
         <framework src="com.google.code.gson:gson:2.8.5" />
