@@ -24,7 +24,7 @@
         </config-file>
 
         <config-file target="*-Info.plist" parent="PAPERANG_AppId">
-            <string>$APP_ID</string>
+            <number>$APP_ID</number>
         </config-file>
         <config-file target="*-Info.plist" parent="PAPERANG_AppKey">
             <string>$APP_KEY</string>
