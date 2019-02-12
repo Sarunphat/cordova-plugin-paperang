@@ -15,7 +15,7 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        NSNumber* appId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppId"];
+        NSString* appId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppId"];
         NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
         NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
