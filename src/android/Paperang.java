@@ -2,6 +2,7 @@ package com.mfec.paperang;
 
 import java.util.List;
 
+import android.bluetooth.BluetoothDevice;
 import android.Manifest;
 import android.content.Context;
 
@@ -75,9 +76,10 @@ public class Paperang extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("register")) {
             final String base64Image = args.getString(0);
+            final Paperang paperang = this;
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    this.register(base64Image, callbackContext);
+                    paperang.register(base64Image, callbackContext);
                 }
             });
             return true;
