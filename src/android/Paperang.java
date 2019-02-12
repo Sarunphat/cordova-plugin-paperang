@@ -23,6 +23,7 @@ import cn.paperang.sdk.client.errcode.DevConnStatus;
  */
 public class Paperang extends CordovaPlugin {
 
+    private static final int PERMISSION_REQUEST_COARSE_LOCATION = 0x01;
     public static final String ACCESS_COARSE_LOCATION = Manifest.permission.ACCESS_COARSE_LOCATION;
     public static final int SEARCH_REQ_CODE = 0;
 
@@ -31,21 +32,34 @@ public class Paperang extends CordovaPlugin {
 
     @Override
     protected void pluginInitialize() {
+        // Prepare app and activity context
         mContext = cordova.getActivity();
         appContext = mContext.getApplicationContext();
+        // Init paperang service
         PaperangApi.init(appContext, appContext.getPackageName(), new OnInitStatusListener() {
             @Override
             public void initStatus(boolean b) {
                 Log.e("sys", "b = " + b);
+                // Register paperang
+                PaperangApi.registerBT(appContext);
             }
         });
-        PaperangApi.registerBT(appContext);
+        if (!cordova.hasPermission(ACCESS_COARSE_LOCATION)) {
+            cordova.requestPermission(this, SEARCH_REQ_CODE, ACCESS_COARSE_LOCATION);
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         PaperangApi.unregisterBT(appContext);
+    }
+
+    @Override
+    public void onRequestPermissionResult(int requestCode, String[] permissions,
+                                         int[] grantResults) throws JSONException
+    {
+        // Call function after request granted.
     }
 
     @Override
