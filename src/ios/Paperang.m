@@ -19,17 +19,15 @@
         NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
         NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
-        NSString* base64Image = [command.arguments objectAtIndex:0];
-        NSString* macAddress = [command.arguments objectAtIndex:1];
+        self.command = command;
+        self.base64Image = [command.arguments objectAtIndex:0];
+        self.macAddress = [command.arguments objectAtIndex:1];
 
         NSLog(@"%@ %@ %@", appId, appKey, appSecret);
         [MMSharePrint registWithAppID:[appId longValue]
             AppKey: appKey
             andSecret: appSecret
             success:^{
-                self.command = command;
-                self.base64Image = base64Image;
-                self.macAddress = macAddress;
                 [self initNotification];
                 [MMSharePrint startScan];
             } fail:^(NSError *error) {
@@ -52,7 +50,6 @@
 	NSDictionary *dic = noti.object;
 	CBPeripheral *pri = dic[@"peripheral"];
 	NSLog(@"Peripheral: %@", pri);
-	//replace @"00:15:83:BD:8A:D8" with your device mac
 	if ([dic[@"MAC"] isEqualToString:self.macAddress]) {
 		[MMSharePrint connectPeripheral:pri];
 	}
