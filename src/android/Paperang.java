@@ -144,10 +144,12 @@ public class Paperang extends CordovaPlugin {
                         @Override
                         public void onDiscoveryTimeout() {
                             Log.e("TEST BT", "BT Discovery timeout.");
+                            isPrinting = false;
                         }
                     }, 30000);
             } else {
                 callbackContext.error("Cannot init Bluetooth");
+                isPrinting = false;
             }
         }
     }
