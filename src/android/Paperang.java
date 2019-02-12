@@ -101,6 +101,7 @@ public class Paperang extends CordovaPlugin {
                                 PaperangDevice device = deviceList.get(i);
                                 if (device.getAddress() == "00:15:83:E3:B3:0F") {
                                     isPrinting = true;
+                                    Log.i("TEST BT", "Connect to : " + device.getAddress());
                                     PaperangApi.connBT("00:15:83:E3:B3:0F", 10000, new OnBtDeviceListener() {
                                         @Override
                                         public void onBtConnSuccess(final BluetoothDevice device, final int code) {
