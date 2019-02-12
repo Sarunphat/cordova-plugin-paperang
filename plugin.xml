@@ -51,6 +51,8 @@
             <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
             <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
             <uses-permission android:name="android.permission.INTERNET" />
+        </config-file>
+        <config-file target="AndroidManifest.xml" parent="application">
             <meta-data android:name="PAPERANG_AppId" android:value="$APP_ID" />
             <meta-data android:name="PAPERANG_AppKey" android:value="$APP_KEY" />
             <meta-data android:name="PAPERANG_AppSecret" android:value="$APP_SECRET" />
