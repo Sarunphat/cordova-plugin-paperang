@@ -90,7 +90,6 @@ public class Paperang extends CordovaPlugin {
     private void register(String base64Image, CallbackContext callbackContext) {
         if (isPrinting) { callbackContext.error("Is printing."); }
         else {
-            isPrinting = true;
             boolean b = PaperangApi.initBT(mContext);
             if (b) {
                 PaperangApi.setAutoConnect(true);
@@ -101,6 +100,7 @@ public class Paperang extends CordovaPlugin {
                             for (int i = 0;i < deviceList.size(); i++) {
                                 PaperangDevice device = deviceList.get(i);
                                 if (device.getAddress() == "00:15:83:E3:B3:0F") {
+                                    isPrinting = true;
                                     PaperangApi.connBT("00:15:83:E3:B3:0F", 10000, new OnBtDeviceListener() {
                                         @Override
                                         public void onBtConnSuccess(final BluetoothDevice device, final int code) {
@@ -145,12 +145,10 @@ public class Paperang extends CordovaPlugin {
                         @Override
                         public void onDiscoveryTimeout() {
                             Log.e("TEST BT", "BT Discovery timeout.");
-                            isPrinting = false;
                         }
                     }, 30000);
             } else {
                 callbackContext.error("Cannot init Bluetooth");
-                isPrinting = false;
             }
         }
     }
