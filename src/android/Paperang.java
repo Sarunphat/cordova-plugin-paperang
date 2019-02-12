@@ -1,6 +1,8 @@
 package com.mfec.paperang;
 
 import android.Manifest;
+import android.content.Context;
+import android.util.Log;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
@@ -25,11 +27,12 @@ public class Paperang extends CordovaPlugin {
     public static final int SEARCH_REQ_CODE = 0;
 
     private Context mContext;
+    private Context appContext;
 
     @Override
     protected void pluginInitialize() {
         mContext = cordova.getActivity();
-        Context appContext = mContext.getApplicationContext();
+        appContext = mContext.getApplicationContext();
         PaperangApi.init(this, appContext.getPackageName(), new OnInitStatusListener() {
             @Override
             public void initStatus(boolean b) {
@@ -42,7 +45,7 @@ public class Paperang extends CordovaPlugin {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        PaperangApi.unregisterBT(this);
+        PaperangApi.unregisterBT(appContext);
     }
 
     @Override
@@ -55,11 +58,6 @@ public class Paperang extends CordovaPlugin {
     }
 
     private void register(CallbackContext callbackContext) {
-        if (appId != null) {
-            
-            callbackContext.success("" + appId + " " + appKey + " " + appSecret);
-        } else {
-            callbackContext.error("Parameter(s) is missing.");
-        }
+        callbackContext.success("Success!");
     }
 }
