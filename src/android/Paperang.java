@@ -30,6 +30,8 @@ public class Paperang extends CordovaPlugin {
     private Context mContext;
     private Context appContext;
 
+    private boolean isPrinting = false;
+
     @Override
     protected void pluginInitialize() {
         // Prepare app and activity context
@@ -65,13 +67,79 @@ public class Paperang extends CordovaPlugin {
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("register")) {
-            this.register(callbackContext);
+            final String base64Image = args.getString(0);
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    this.register(base64Image, callbackContext);
+                }
+            });
             return true;
         }
         return false;
     }
 
-    private void register(CallbackContext callbackContext) {
-        callbackContext.success("Success!");
+    private void register(String base64Image, CallbackContext callbackContext) {
+        if (isPrinting) { callbackContext.error("Is printing."); }
+        else {
+            isPrinting = true;
+            boolean b = PaperangApi.initBT(mContext);
+            if (b) {
+                PaperangApi.setAutoConnect(true);
+                    PaperangApi.searchBT(new OnBtDeviceListener() {
+                        @Override
+                        public void onBtFound(List<PaperangDevice> deviceList) {
+                            for (int i = 0;i < deviceList.size(); i++) {
+                                PaperangDevice device = deviceList.get(i);
+                                if (device.getAddress() == "00:15:83:E3:B3:0F") {
+                                    PaperangApi.connBT("00:15:83:E3:B3:0F", 10000, new OnBtDeviceListener() {
+                                        @Override
+                                        public void onBtConnSuccess(final BluetoothDevice device, final int code) {
+                                            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+                                            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                                            PaperangApi.sendImgToBT(mContext, bmp, new OnBtDeviceListener() {
+                                                @Override
+                                                public void onBtDataSendFinish() {
+                                                    Log.d("TEST BT", "Send data finished.");
+                                                }
+                            
+                                                @Override
+                                                public void onBtDataSendFailed(final int code, final String msg) {
+                                                    callbackContext.error("Data sending failed.");
+                                                    isPrinting = false;
+                                                }
+                            
+                                                @Override
+                                                public void onBtPrintFinish() {
+                                                    Log.d("TEST BT", "BT Print finished.");
+                                                    isPrinting = false;
+                                                }
+                                            });
+                                        }
+                    
+                                        @Override
+                                        public void onBtConnFailed(final int code, final String msg) {
+                                            callbackContext.error("Connect Bluetooth failed.");
+                                            isPrinting = false;
+                                        }
+                    
+                                        @Override
+                                        public void onBtConnTimeout() {
+                                            callbackContext.error("Connect Bluetooth timeout.");
+                                            isPrinting = false;
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onDiscoveryTimeout() {
+                            Log.e("TEST BT", "BT Discovery timeout.");
+                        }
+                    }, 30000);
+            } else {
+                callbackContext.error("Cannot init Bluetooth");
+            }
+        }
     }
 }
