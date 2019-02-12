@@ -107,7 +107,8 @@ public class Paperang extends CordovaPlugin {
                                     PaperangApi.connBT(macAddress, 10000, new OnBtDeviceListener() {
                                         @Override
                                         public void onBtConnSuccess(final BluetoothDevice device, final int code) {
-                                            byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
+                                            String base64String = base64Image.split(",")[1];
+                                            byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
                                             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                                             PaperangApi.sendImgToBT(mContext, decodedByte, new OnBtDeviceListener() {
                                                 @Override

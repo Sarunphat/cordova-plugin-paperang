@@ -5,6 +5,7 @@
 @interface Paperang ()
 
 @property (strong, nonatomic) NSString *base64Image;
+@property (strong, nonatomic) NSString *macAddress;
 @property (strong, nonatomic) CDVInvokedUrlCommand *command;
 
 @end
@@ -14,11 +15,13 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        NSNumber* appId = [command.arguments objectAtIndex:0];
-        NSString* appKey = [command.arguments objectAtIndex:1];
-        NSString* appSecret = [command.arguments objectAtIndex:2];
+        NSNumber* appId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppId"];
+        NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
+        NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
-        NSString* base64Image = [command.arguments objectAtIndex:3];
+        NSString* base64Image = [command.arguments objectAtIndex:0];
+        NSString* macAddress = [command.arguments objectAtIndex:1];
+
         NSLog(@"%@ %@ %@", appId, appKey, appSecret);
         [MMSharePrint registWithAppID:[appId longValue]
             AppKey: appKey
@@ -26,6 +29,7 @@
             success:^{
                 self.command = command;
                 self.base64Image = base64Image;
+                self.macAddress = macAddress;
                 [self initNotification];
                 [MMSharePrint startScan];
             } fail:^(NSError *error) {
@@ -49,7 +53,7 @@
 	CBPeripheral *pri = dic[@"peripheral"];
 	NSLog(@"Peripheral: %@", pri);
 	//replace @"00:15:83:BD:8A:D8" with your device mac
-	if ([dic[@"MAC"] isEqualToString:@"00:15:83:E3:B3:0F"]) {
+	if ([dic[@"MAC"] isEqualToString:self.macAddress]) {
 		[MMSharePrint connectPeripheral:pri];
 	}
 }
