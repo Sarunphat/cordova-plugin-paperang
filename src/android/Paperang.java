@@ -80,7 +80,7 @@ public class Paperang extends CordovaPlugin {
             final Paperang paperang = this;
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    paperang.register(base64Image, callbackContext);
+                    paperang.register(base64Image, macAddress, callbackContext);
                 }
             });
             return true;
