@@ -1,8 +1,15 @@
 package com.mfec.paperang;
 
+import java.util.List;
+
 import android.Manifest;
 import android.content.Context;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import android.util.Log;
+import android.util.Base64;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
@@ -96,7 +103,7 @@ public class Paperang extends CordovaPlugin {
                                         public void onBtConnSuccess(final BluetoothDevice device, final int code) {
                                             byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
                                             Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                                            PaperangApi.sendImgToBT(mContext, bmp, new OnBtDeviceListener() {
+                                            PaperangApi.sendImgToBT(mContext, decodedByte, new OnBtDeviceListener() {
                                                 @Override
                                                 public void onBtDataSendFinish() {
                                                     Log.d("TEST BT", "Send data finished.");
