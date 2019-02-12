@@ -51,12 +51,12 @@ public class Paperang extends CordovaPlugin {
             public void initStatus(boolean b) {
                 Log.e("sys", "b = " + b);
                 // Register paperang
-                PaperangApi.registerBT(appContext);
             }
         });
         if (!cordova.hasPermission(ACCESS_COARSE_LOCATION)) {
             cordova.requestPermission(this, SEARCH_REQ_CODE, ACCESS_COARSE_LOCATION);
         }
+        PaperangApi.registerBT(appContext);
     }
 
     @Override
