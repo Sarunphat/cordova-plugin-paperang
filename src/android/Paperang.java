@@ -97,7 +97,7 @@ public class Paperang extends CordovaPlugin {
                     PaperangApi.searchBT(new OnBtDeviceListener() {
                         @Override
                         public void onBtFound(List<PaperangDevice> deviceList) {
-                            Log.i(TAG, "DeviceList = " + deviceList.toString());
+                            Log.i("TEST BT", "DeviceList = " + deviceList.toString());
                             for (int i = 0;i < deviceList.size(); i++) {
                                 PaperangDevice device = deviceList.get(i);
                                 if (device.getAddress() == "00:15:83:E3:B3:0F") {
