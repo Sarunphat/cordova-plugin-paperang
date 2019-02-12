@@ -33,7 +33,7 @@ public class Paperang extends CordovaPlugin {
     protected void pluginInitialize() {
         mContext = cordova.getActivity();
         appContext = mContext.getApplicationContext();
-        PaperangApi.init(this, appContext.getPackageName(), new OnInitStatusListener() {
+        PaperangApi.init(appContext, appContext.getPackageName(), new OnInitStatusListener() {
             @Override
             public void initStatus(boolean b) {
                 Log.e("sys", "b = " + b);
