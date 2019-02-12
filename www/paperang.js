@@ -1,11 +1,11 @@
 window.PaperangAPI = {
-    register: (base64Image, successCallback, errorCallback) => {
+    register: (base64Image, macAddress, successCallback, errorCallback) => {
         cordova.exec(
             successCallback,
             errorCallback,
             "Paperang",
             "register",
-            [base64Image]
+            [base64Image, macAddress]
         );
     },
     scan: (successCallback, errorCallback) => {

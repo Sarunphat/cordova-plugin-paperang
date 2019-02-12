@@ -76,6 +76,7 @@ public class Paperang extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         if (action.equals("register")) {
             final String base64Image = args.getString(0);
+            final String macAddress = args.getString(1);
             final Paperang paperang = this;
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
@@ -87,7 +88,7 @@ public class Paperang extends CordovaPlugin {
         return false;
     }
 
-    private void register(String base64Image, CallbackContext callbackContext) {
+    private void register(String base64Image, String macAddress, CallbackContext callbackContext) {
         if (isPrinting) { callbackContext.error("Is printing."); }
         else {
             boolean b = PaperangApi.initBT(mContext);
@@ -100,10 +101,10 @@ public class Paperang extends CordovaPlugin {
                             for (int i = 0;i < deviceList.size(); i++) {
                                 PaperangDevice device = deviceList.get(i);
                                 Log.i("TEST BT", i + ": " + device.getAddress());
-                                if (device.getAddress().equals("00:15:83:E3:B3:0F")) {
+                                if (device.getAddress().equals(macAddress)) {
                                     isPrinting = true;
                                     Log.i("TEST BT", "Connect to : " + device.getAddress());
-                                    PaperangApi.connBT("00:15:83:E3:B3:0F", 10000, new OnBtDeviceListener() {
+                                    PaperangApi.connBT(macAddress, 10000, new OnBtDeviceListener() {
                                         @Override
                                         public void onBtConnSuccess(final BluetoothDevice device, final int code) {
                                             byte[] decodedString = Base64.decode(base64Image, Base64.DEFAULT);
@@ -130,14 +131,14 @@ public class Paperang extends CordovaPlugin {
                     
                                         @Override
                                         public void onBtConnFailed(final int code, final String msg) {
-                                            callbackContext.error("Connect Bluetooth failed.");
                                             isPrinting = false;
+                                            callbackContext.error("Connect Bluetooth failed.");
                                         }
                     
                                         @Override
                                         public void onBtConnTimeout() {
-                                            callbackContext.error("Connect Bluetooth timeout.");
                                             isPrinting = false;
+                                            callbackContext.error("Connect Bluetooth timeout.");
                                         }
                                     });
                                 }
