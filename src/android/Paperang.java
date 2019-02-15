@@ -114,18 +114,19 @@ public class Paperang extends CordovaPlugin {
                                                 @Override
                                                 public void onBtDataSendFinish() {
                                                     Log.d("TEST BT", "Send data finished.");
+                                                    isPrinting = false;
                                                 }
                             
                                                 @Override
                                                 public void onBtDataSendFailed(final int code, final String msg) {
-                                                    callbackContext.error("Data sending failed.");
                                                     isPrinting = false;
+                                                    callbackContext.error("Data sending failed.");
                                                 }
                             
                                                 @Override
                                                 public void onBtPrintFinish() {
-                                                    Log.d("TEST BT", "BT Print finished.");
                                                     isPrinting = false;
+                                                    Log.d("TEST BT", "BT Print finished.");
                                                 }
                                             });
                                         }
