@@ -72,10 +72,10 @@ public class Paperang extends CordovaPlugin {
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        final Paperang paperang = this;
         if (action.equals("register")) {
             final String base64Image = args.getString(0);
             final String macAddress = args.getString(1);
-            final Paperang paperang = this;
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     paperang.register(callbackContext);
@@ -130,13 +130,13 @@ public class Paperang extends CordovaPlugin {
         PaperangApi.searchBT(new OnBtDeviceListener() {
             @Override
             public void onBtFound(List<PaperangDevice> deviceList) {
-                String jsonResult = '[';
+                String jsonResult = "[";
                 for (int i = 0;i < deviceList.size(); i++) {
                     PaperangDevice device = deviceList.get(i);
                     if (i > 0) jsonResult += ",";
                     jsonResult += "{\"macAddress\":\"" + "\"" + device.getAddress() + "\"}";
                 }
-                jsonResult += ']';
+                jsonResult += "]";
                 callbackContext.success(jsonResult);
             }
 
