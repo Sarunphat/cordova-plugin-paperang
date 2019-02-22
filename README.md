@@ -9,3 +9,7 @@ cordova plugin add https://github.com/Sarunphat/cordova-plugin-paperang.git --va
 ```
 
 If you need to change any variables, it's recommended to remove and re-add the plugin via command above to make sure all change necessary are performed.
+
+## Demos
+
+Working example can be found at https://github.com/Sarunphat/cordova-paperang-example
