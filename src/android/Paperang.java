@@ -155,7 +155,7 @@ public class Paperang extends CordovaPlugin {
                 callbackContext.sendPluginResult(pluginResult);
                 JSONObject result = new JSONObject();
                 JSONArray resultDevices = new JSONArray();
-                result.put("state", "scanning");
+                result.put("state", "finished");
                 result.put("deviceList", resultDevices);
                 callbackContext.success(object);
             }
