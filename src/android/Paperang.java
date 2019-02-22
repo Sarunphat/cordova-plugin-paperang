@@ -119,7 +119,7 @@ public class Paperang extends CordovaPlugin {
     private void register(CallbackContext callbackContext) {
         boolean b = PaperangApi.initBT(mContext);
         if (b) {
-            callback.success();
+            callbackContext.success();
         } else {
             callbackContext.error("Cannot init Bluetooth");
         }
@@ -137,7 +137,7 @@ public class Paperang extends CordovaPlugin {
                     jsonResult += "{\"macAddress\":\"" + "\"" + device.getAddress() + "\"}";
                 }
                 jsonResult += ']';
-                callback.success(jsonResult);
+                callbackContext.success(jsonResult);
             }
 
             @Override
@@ -151,7 +151,7 @@ public class Paperang extends CordovaPlugin {
         PaperangApi.connBT(macAddress, 10000, new OnBtDeviceListener() {
             @Override
             public void onBtConnSuccess(final BluetoothDevice device, final int code) {
-                callback.success();
+                callbackContext.success();
             }
 
             @Override
