@@ -141,7 +141,7 @@ public class Paperang extends CordovaPlugin {
                 }
                 result.put("state", "scanning");
                 result.put("deviceList", resultDevices);
-                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, object);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
                 pluginResult.setKeepCallback(true); // keep callback
                 callbackContext.sendPluginResult(pluginResult);
             }
@@ -152,7 +152,7 @@ public class Paperang extends CordovaPlugin {
                 JSONArray resultDevices = new JSONArray();
                 result.put("state", "finished");
                 result.put("deviceList", resultDevices);
-                callbackContext.success(object);
+                callbackContext.success(result);
             }
         }, 30000);
     }
