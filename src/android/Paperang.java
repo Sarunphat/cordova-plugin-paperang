@@ -132,7 +132,7 @@ public class Paperang extends CordovaPlugin {
                 for (int i = 0;i < deviceList.size(); i++) {
                     PaperangDevice device = deviceList.get(i);
                     if (i > 0) jsonResult += ",";
-                    jsonResult += "{\"macAddress\":\"" + "\"" + device.getAddress() + "\"}";
+                    jsonResult += "{\"name\":\"" + device.getName() + "\", \"macAddress\":\"" + device.getAddress() + "\"}";
                 }
                 jsonResult += "]";
                 callbackContext.success(jsonResult);
