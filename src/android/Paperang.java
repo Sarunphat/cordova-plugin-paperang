@@ -83,7 +83,7 @@ public class Paperang extends CordovaPlugin {
         } else if (action.equals("scan")) {
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    paperang.register(callbackContext);
+                    paperang.scan(callbackContext);
                 }
             });
             return true;
