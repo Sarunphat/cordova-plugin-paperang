@@ -4,8 +4,7 @@ window.PaperangAPI = {
             successCallback,
             errorCallback,
             "Paperang",
-            "register",
-            [base64Image, macAddress]
+            "register"
         );
     },
     scan: (successCallback, errorCallback) => {
