@@ -1,5 +1,5 @@
 window.PaperangAPI = {
-    register: (base64Image, macAddress, successCallback, errorCallback) => {
+    register: (successCallback, errorCallback) => {
         cordova.exec(
             successCallback,
             errorCallback,
