@@ -130,29 +130,37 @@ public class Paperang extends CordovaPlugin {
             @Override
             public void onBtFound(List<PaperangDevice> deviceList) {
                 Log.d("TEST BT", "Device: " + deviceList.toString());
-                JSONObject result = new JSONObject();
-                JSONArray resultDevices = new JSONArray();
-                for (int i = 0;i < deviceList.size(); i++) {
-                    PaperangDevice device = deviceList.get(i);
-                    JSONObject resultDevice = new JSONObject();
-                    resultDevice.put("name", device.getName());
-                    resultDevice.put("address", device.getAddress());
-                    resultDevices.put(resultDevice);
+                try {
+                    JSONObject result = new JSONObject();
+                    JSONArray resultDevices = new JSONArray();
+                    for (int i = 0;i < deviceList.size(); i++) {
+                        PaperangDevice device = deviceList.get(i);
+                        JSONObject resultDevice = new JSONObject();
+                        resultDevice.put("name", device.getName());
+                        resultDevice.put("address", device.getAddress());
+                        resultDevices.put(resultDevice);
+                    }
+                    result.put("state", "scanning");
+                    result.put("deviceList", resultDevices);
+                    PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
+                    pluginResult.setKeepCallback(true); // keep callback
+                    callbackContext.sendPluginResult(pluginResult);
+                } catch (JSONException e) {
+                    callbackContext.error(e.toString());
                 }
-                result.put("state", "scanning");
-                result.put("deviceList", resultDevices);
-                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
-                pluginResult.setKeepCallback(true); // keep callback
-                callbackContext.sendPluginResult(pluginResult);
             }
 
             @Override
             public void onDiscoveryTimeout() {
-                JSONObject result = new JSONObject();
-                JSONArray resultDevices = new JSONArray();
-                result.put("state", "finished");
-                result.put("deviceList", resultDevices);
-                callbackContext.success(result);
+                try {
+                    JSONObject result = new JSONObject();
+                    JSONArray resultDevices = new JSONArray();
+                    result.put("state", "finished");
+                    result.put("deviceList", resultDevices);
+                    callbackContext.success(result);
+                } catch (JSONException e) {
+                    callbackContext.error(e.toString());
+                }
             }
         }, 30000);
     }
