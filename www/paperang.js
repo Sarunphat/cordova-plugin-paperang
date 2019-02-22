@@ -20,7 +20,7 @@ window.PaperangAPI = {
             successCallback,
             errorCallback,
             "Paperang",
-            "connect"
+            "connect",
             [macAddress]
         );
     },
@@ -37,7 +37,7 @@ window.PaperangAPI = {
             successCallback,
             errorCallback,
             "Paperang",
-            "print"
+            "print",
             [base64Image]
         );
     }
