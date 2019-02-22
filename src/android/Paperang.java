@@ -14,6 +14,7 @@ import android.util.Base64;
 
 import org.apache.cordova.CordovaPlugin;
 import org.apache.cordova.CallbackContext;
+import org.apache.cordova.PluginResult;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -124,24 +125,39 @@ public class Paperang extends CordovaPlugin {
     }
 
     private void scan(CallbackContext callbackContext) {
+        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+        pluginResult.setKeepCallback(true); // keep callback
+        callbackContext.sendPluginResult(pluginResult);
+
         PaperangApi.setAutoConnect(true);
         PaperangApi.searchBT(new OnBtDeviceListener() {
             @Override
             public void onBtFound(List<PaperangDevice> deviceList) {
                 Log.d("TEST BT", "Device: " + deviceList.toString());
-                String jsonResult = "[";
+                JSONObject result = new JSONObject();
+                JSONArray resultDevices = new JSONArray();
                 for (int i = 0;i < deviceList.size(); i++) {
                     PaperangDevice device = deviceList.get(i);
-                    if (i > 0) jsonResult += ",";
-                    jsonResult += "{\"name\":\"" + device.getName() + "\", \"macAddress\":\"" + device.getAddress() + "\"}";
+                    JSONObject resultDevice = new JSONObject();
+                    resultDevice.put("name", device.getName());
+                    resultDevice.put("address", device.getAddress());
+                    resultDevices.put(resultDevice);
                 }
-                jsonResult += "]";
-                callbackContext.success(jsonResult);
+                result.put("state", "scanning");
+                result.put("deviceList", resultDevices);
+                callbackContext.success(object);
             }
 
             @Override
             public void onDiscoveryTimeout() {
-                Log.e("TEST BT", "BT Discovery timeout.");
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
+                pluginResult.setKeepCallback(false); // keep callback
+                callbackContext.sendPluginResult(pluginResult);
+                JSONObject result = new JSONObject();
+                JSONArray resultDevices = new JSONArray();
+                result.put("state", "scanning");
+                result.put("deviceList", resultDevices);
+                callbackContext.success(object);
             }
         }, 30000);
     }
