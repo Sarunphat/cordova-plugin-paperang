@@ -129,7 +129,6 @@ public class Paperang extends CordovaPlugin {
         PaperangApi.searchBT(new OnBtDeviceListener() {
             @Override
             public void onBtFound(List<PaperangDevice> deviceList) {
-                Log.d("TEST BT", "Device: " + deviceList.toString());
                 try {
                     JSONObject result = new JSONObject();
                     JSONArray resultDevices = new JSONArray();
