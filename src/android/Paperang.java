@@ -125,10 +125,6 @@ public class Paperang extends CordovaPlugin {
     }
 
     private void scan(CallbackContext callbackContext) {
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
-        pluginResult.setKeepCallback(true); // keep callback
-        callbackContext.sendPluginResult(pluginResult);
-
         PaperangApi.setAutoConnect(true);
         PaperangApi.searchBT(new OnBtDeviceListener() {
             @Override
@@ -145,14 +141,13 @@ public class Paperang extends CordovaPlugin {
                 }
                 result.put("state", "scanning");
                 result.put("deviceList", resultDevices);
-                callbackContext.success(object);
+                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, object);
+                pluginResult.setKeepCallback(true); // keep callback
+                callbackContext.sendPluginResult(pluginResult);
             }
 
             @Override
             public void onDiscoveryTimeout() {
-                PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, message);
-                pluginResult.setKeepCallback(false); // keep callback
-                callbackContext.sendPluginResult(pluginResult);
                 JSONObject result = new JSONObject();
                 JSONArray resultDevices = new JSONArray();
                 result.put("state", "finished");
