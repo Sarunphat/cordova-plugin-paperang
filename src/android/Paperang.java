@@ -74,8 +74,6 @@ public class Paperang extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         final Paperang paperang = this;
         if (action.equals("register")) {
-            final String base64Image = args.getString(0);
-            final String macAddress = args.getString(1);
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     paperang.register(callbackContext);
