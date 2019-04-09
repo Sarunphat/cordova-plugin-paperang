@@ -1,12 +1,13 @@
 #import "Paperang.h"
 #import <Cordova/CDVPlugin.h>
 #import <MMApi/MMApi.h>
+#import <CoreBluetooth/CoreBluetooth.h>
 
 @interface Paperang ()
 
 @property (strong, nonatomic) NSString *base64Image;
 @property (strong, nonatomic) NSString *macAddress;
-@property (strong, nonatomic) CDVInvokedUrlCommand *command;
+@property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
 
 @end
 
@@ -22,22 +23,51 @@
         NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
         NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
-        self.command = command;
         self.base64Image = [command.arguments objectAtIndex:0];
         self.macAddress = [command.arguments objectAtIndex:1];
 
-        NSLog(@"%@ %@ %@", appId, appKey, appSecret);
         [MMSharePrint registWithAppID:[appId longValue]
             AppKey: appKey
             andSecret: appSecret
             success:^{
-                [self initNotification];
-                [MMSharePrint startScan];
+                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
+                callbackId:self.command.callbackId];
             } fail:^(NSError *error) {
                 [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
                 callbackId:command.callbackId];
             }];
     }];
+}
+
+- (void) scan:(CDVInvokedUrlCommand*)command 
+{
+    [self.commandDelegate runInBackground:^{
+        if (self.scanCommand != nil) {
+            self.scanCommand = command;
+            NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+            [center addObserver:self selector:@selector(didDiscoverDevice:) 
+                    name:MMDidDiscoverPeripheralNotification 
+                    object:nil];
+            [MMSharePrint startScan];
+        } else {
+            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
+            callbackId:command.callbackId];
+        }
+    }];
+}
+
+- (void)didDiscoverDevice:(NSNotification *)noti {
+	NSLog(@"Did discover device %@",noti);
+	NSDictionary *dic = noti.object;
+	CBPeripheral *pri = dic[@"peripheral"];
+	NSLog(@"Peripheral: %@", pri);
+    NSDictionary *device = @{ name: pri.name, address: dic[@"MAC"]};
+    NSArray *result = @[device];
+    [center removeObserver:self
+            name:MMDidDiscoverPeripheralNotification 
+            object:nil];
+    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
+    callbackId:self.scanCommand.callbackId];
 }
 
 - (void)initNotification {
