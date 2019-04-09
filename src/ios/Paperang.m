@@ -150,10 +150,10 @@
         
         [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
             [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
-            callbackId:self.command.callbackId];
+            callbackId:command.callbackId];
         } fail:^(NSError *error){
             [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
-            callbackId:self.command.callbackId];
+            callbackId:command.callbackId];
         }];
     }];
 }
