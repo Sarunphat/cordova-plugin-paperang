@@ -52,9 +52,9 @@
 }
 
 - (void)didDiscoverDevice:(NSNotification *)noti {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     if (self.scanCommand != nil) {
         NSLog(@"Did discover device %@",noti);
-        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
         NSDictionary *dic = noti.object;
         CBPeripheral *pri = dic[@"peripheral"];
         NSLog(@"Peripheral: %@", pri);
@@ -70,7 +70,7 @@
                 name:MMDidDiscoverPeripheralNotification 
                 object:nil];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
-        callbackId:scanCommand.callbackId];
+        callbackId:self.scanCommand.callbackId];
     }
 }
 
