@@ -103,7 +103,7 @@
     [self.commandDelegate runInBackground:^{
         self.connectCommand = command;
         NSDictionary* dict = [self getPeripheral: [command.arguments objectAtIndex:0]];
-        CBPeripheral *pri = dic[@"peripheral"];
+        CBPeripheral *pri = dict[@"peripheral"];
         [MMSharePrint connectPeripheral:pri];
     }];
 }
