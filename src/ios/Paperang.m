@@ -18,7 +18,7 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        peripheral = [[NSMutableArray alloc] initWithCapacity: 1];
+        self.peripheral = [[NSMutableArray alloc] initWithCapacity: 1];
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         
@@ -91,7 +91,7 @@
     }
 }
 
-- (NSDictionary*) getPeripheral (NSString *) mac {
+- (NSDictionary*) getPeripheral: (NSString *) mac {
     for (NSDictionary* p in self.peripherals) {
         if ([p[@"MAC"] isEqualToString: mac]) {
             return p;
