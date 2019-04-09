@@ -7,7 +7,9 @@
 
 @property (strong, nonatomic) NSString *base64Image;
 @property (strong, nonatomic) NSString *macAddress;
+@property (strong, nonatomic) NSMutableArray *peripherals;
 @property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
+@property (strong, nonatomic) CDVInvokedUrlCommand *connectCommand;
 
 @end
 
@@ -16,6 +18,7 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
+        peripheral = [[NSMutableArray alloc] initWithCapacity: 1];
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         
@@ -39,35 +42,70 @@
     }];
 }
 
+- (void)initNotification {
+	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+	[center addObserver:self selector:@selector(didDiscoverDevice:) name:MMDidDiscoverPeripheralNotification object:nil];
+	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
+    [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
+	[center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
+	[center addObserver:self selector:@selector(didPrintNotification:) name:MMDidFinishPrintNotification object:nil];
+}
+
 - (void) scan:(CDVInvokedUrlCommand*)command 
 {
     [self.commandDelegate runInBackground:^{
         self.scanCommand = command;
-        [MMSharePrint startScan];
+	    [MMSharePrint startScan];
     }];
 }
 
-- (void)didDiscoverDevice:(NSNotification *)noti {
+- (void) didDiscoverDevice:(NSNotification *)noti {
     if (self.scanCommand != nil) {
         NSDictionary *dic = noti.object;
         CBPeripheral *pri = dic[@"peripheral"];
         NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys:  pri.name, @"name", dic[@"MAC"], @"address", nil];
         NSArray *result = @[device];
         [MMSharePrint stopScan];
+        [self addPeripheral: dic];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
         callbackId:self.scanCommand.callbackId];
+        self.scanCommand = nil;
     } else {
+        [MMSharePrint stopScan];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
         callbackId:self.scanCommand.callbackId];
+        self.scanCommand = nil;
     }
 }
 
-- (void)initNotification {
-	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-	[center addObserver:self selector:@selector(didDiscoverDevice:) name:MMDidDiscoverPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(statusDidChange:) name:MMDeviceExceptionStatusNotification object:nil];
-	[center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
+- (void) addPeripheral:(NSDictionary *) peri {
+    bool isAdded = false;
+    for (NSDictionary* p in self.peripherals) {
+        if ([p[@"MAC"] isEqualToString: peri[@"MAC"]]) {
+            isAdded = true;
+            break;
+        }
+    }
+    if (!isAdded) {
+        [self.peripherals addObject:peri];
+    }
+}
+
+- (NSDictionary*) getPeripheral (NSString *) mac {
+    for (NSDictionary* p in self.peripherals) {
+        if ([p[@"MAC"] isEqualToString: mac]) {
+            return p;
+        }
+    }
+    return nil;
+}
+
+- (void) connect:(CDVInvokedUrlCommand*) command {
+    [self.commandDelegate runInBackground:^{
+        self.macAddress = [command.arguments objectAtIndex:0];
+        self.scanCommand = command;
+
+    }];
 }
 
 - (void)didConnectDevice:(NSNotification *)noti {
@@ -92,10 +130,5 @@
     // [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
     // callbackId:self.command.callbackId];
 }
-
-- (void)statusDidChange:(NSNotification *)noti {
-	NSLog(@"Status change: %@", noti);
-}
-
 
 @end
