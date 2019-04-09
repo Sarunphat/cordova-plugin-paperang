@@ -18,7 +18,7 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        self.peripheral = [[NSMutableArray alloc] initWithCapacity: 1];
+        self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         
