@@ -67,9 +67,9 @@
         NSArray *result = @[device];
         [MMSharePrint stopScan];
         [self addPeripheral: dic];
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
-        callbackId:self.scanCommand.callbackId];
-        self.scanCommand = nil;
+        // [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
+        // callbackId:self.scanCommand.callbackId];
+        // self.scanCommand = nil;
     } else {
         [MMSharePrint stopScan];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
