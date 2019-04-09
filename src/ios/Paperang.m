@@ -79,16 +79,6 @@
 	// [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
 }
 
-- (void)didDiscoverDevice:(NSNotification *)noti {
-	NSLog(@"Did discover device %@",noti);
-	NSDictionary *dic = noti.object;
-	CBPeripheral *pri = dic[@"peripheral"];
-	NSLog(@"Peripheral: %@", pri);
-	if ([dic[@"MAC"] isEqualToString:self.macAddress]) {
-		[MMSharePrint connectPeripheral:pri];
-	}
-}
-
 - (void)didConnectDevice:(NSNotification *)noti {
 	// NSLog(@"connect success");
 
