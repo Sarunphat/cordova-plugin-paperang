@@ -42,13 +42,12 @@
 - (void) scan:(CDVInvokedUrlCommand*)command 
 {
     [self.commandDelegate runInBackground:^{
-            self.scanCommand = command;
-            NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-            [center addObserver:self selector:@selector(didDiscoverDevice:) 
-                    name:MMDidDiscoverPeripheralNotification 
-                    object:nil];
-            [MMSharePrint startScan];
-        
+        self.scanCommand = command;
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        [center addObserver:self selector:@selector(didDiscoverDevice:) 
+                name:MMDidDiscoverPeripheralNotification 
+                object:nil];
+        [MMSharePrint startScan];
     }];
 }
 
@@ -67,7 +66,7 @@
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
         callbackId:self.scanCommand.callbackId];
     } else {
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]; 
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
         callbackId:command.callbackId];
     }
 }
