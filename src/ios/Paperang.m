@@ -71,11 +71,11 @@
 }
 
 - (void)initNotification {
-	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-	[center addObserver:self selector:@selector(didDiscoverDevice:) name:MMDidDiscoverPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(statusDidChange:) name:MMDeviceExceptionStatusNotification object:nil];
-	[center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
+	// NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+	// [center addObserver:self selector:@selector(didDiscoverDevice:) name:MMDidDiscoverPeripheralNotification object:nil];
+	// [center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
+	// [center addObserver:self selector:@selector(statusDidChange:) name:MMDeviceExceptionStatusNotification object:nil];
+	// [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
 }
 
 - (void)didDiscoverDevice:(NSNotification *)noti {
@@ -89,26 +89,26 @@
 }
 
 - (void)didConnectDevice:(NSNotification *)noti {
-	NSLog(@"connect success");
+	// NSLog(@"connect success");
 
-    NSURL *url = [NSURL URLWithString:self.base64Image];    
-    NSData *imageData = [NSData dataWithContentsOfURL:url];
-    UIImage *ret = [UIImage imageWithData:imageData];
+    // NSURL *url = [NSURL URLWithString:self.base64Image];    
+    // NSData *imageData = [NSData dataWithContentsOfURL:url];
+    // UIImage *ret = [UIImage imageWithData:imageData];
     
-    [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
-        callbackId:self.command.callbackId];
-    } fail:^(NSError *error){
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
-        callbackId:self.command.callbackId];
-    }];
+    // [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
+    //     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
+    //     callbackId:self.command.callbackId];
+    // } fail:^(NSError *error){
+    //     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
+    //     callbackId:self.command.callbackId];
+    // }];
 	
 }
 
 - (void)didFailConnectDevice:(NSNotification *)noti {
-	NSLog(@"Fail to connect to device %@", noti);
-    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
-    callbackId:self.command.callbackId];
+	// NSLog(@"Fail to connect to device %@", noti);
+    // [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
+    // callbackId:self.command.callbackId];
 }
 
 - (void)statusDidChange:(NSNotification *)noti {
