@@ -10,6 +10,7 @@
 @property (strong, nonatomic) NSMutableArray *peripherals;
 @property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *connectCommand;
+@property (strong, nonatomic) CDVInvokedUrlCommand *disconnectCommand;
 
 @end
 
@@ -47,8 +48,8 @@
 	[center addObserver:self selector:@selector(didDiscoverDevice:) name:MMDidDiscoverPeripheralNotification object:nil];
 	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
     [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(didPrintNotification:) name:MMDidFinishPrintNotification object:nil];
+	[center addObserver:self selector:@selector(didDisconnectDevice:) name:MMDidDisconnectPeripheralNotification object:nil];
+	[center addObserver:self selector:@selector(didPrintFinished:) name:MMDidFinishPrintNotification object:nil];
 }
 
 - (void) scan:(CDVInvokedUrlCommand*)command 
@@ -58,7 +59,6 @@
 	    [MMSharePrint startScan];
     }];
 }
-
 - (void) didDiscoverDevice:(NSNotification *)noti {
     if (self.scanCommand != nil) {
         NSDictionary *dic = noti.object;
@@ -90,7 +90,6 @@
         [self.peripherals addObject:peri];
     }
 }
-
 - (NSDictionary*) getPeripheral: (NSString *) mac {
     for (NSDictionary* p in self.peripherals) {
         if ([p[@"MAC"] isEqualToString: mac]) {
@@ -102,15 +101,23 @@
 
 - (void) connect:(CDVInvokedUrlCommand*) command {
     [self.commandDelegate runInBackground:^{
-        self.macAddress = [command.arguments objectAtIndex:0];
-        self.scanCommand = command;
-
+        self.connectCommand = command;
+        NSDictionary* dict = [self getPeripheral: [command.arguments objectAtIndex:0]];
+        CBPeripheral *pri = dic[@"peripheral"];
+        [MMSharePrint connectPeripheral:pri];
     }];
 }
-
 - (void)didConnectDevice:(NSNotification *)noti {
-	// NSLog(@"connect success");
-
+	NSLog(@"connect success: %@", noti);
+    if(self.connectCommand != nil) {
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK]
+        callbackId:self.connectCommand.callbackId];
+        self.connectCommand = nil;
+    } else {
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Connect command is nil."]
+        callbackId:self.connectCommand.callbackId];
+        self.connectCommand = nil;
+    }
     // NSURL *url = [NSURL URLWithString:self.base64Image];    
     // NSData *imageData = [NSData dataWithContentsOfURL:url];
     // UIImage *ret = [UIImage imageWithData:imageData];
@@ -124,11 +131,25 @@
     // }];
 	
 }
-
 - (void)didFailConnectDevice:(NSNotification *)noti {
-	// NSLog(@"Fail to connect to device %@", noti);
-    // [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
-    // callbackId:self.command.callbackId];
+	NSLog(@"Fail to connect to device %@", noti);
+    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Failed to connect to device."] 
+    callbackId:self.connectCommand.callbackId];
+    self.connectCommand = nil;
+}
+
+- (void) disconnect:(CDVInvokedUrlCommand*) command {
+	NSLog(@"Disconect:");
+    [self.commandDelegate runInBackground:^{
+        self.disconnectCommand = command;
+        [MMSharePrint disconnect];
+    }];
+}
+- (void)didDisconnectDevice:(NSNotification *)noti {
+	NSLog(@"Disconect device %@", noti);
+    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
+    callbackId:self.disconnectCommand.callbackId];
+    self.disconnectCommand = nil;
 }
 
 @end
