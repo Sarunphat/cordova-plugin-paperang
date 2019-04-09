@@ -42,33 +42,34 @@
 - (void) scan:(CDVInvokedUrlCommand*)command 
 {
     [self.commandDelegate runInBackground:^{
-        if (self.scanCommand != nil) {
             self.scanCommand = command;
             NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
             [center addObserver:self selector:@selector(didDiscoverDevice:) 
                     name:MMDidDiscoverPeripheralNotification 
                     object:nil];
             [MMSharePrint startScan];
-        } else {
-            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
-            callbackId:command.callbackId];
-        }
+        
     }];
 }
 
 - (void)didDiscoverDevice:(NSNotification *)noti {
-	NSLog(@"Did discover device %@",noti);
-    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-	NSDictionary *dic = noti.object;
-	CBPeripheral *pri = dic[@"peripheral"];
-	NSLog(@"Peripheral: %@", pri);
-    NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys: @"name", pri.name, @"address", dic[@"MAC"], nil];
-    NSArray *result = @[device];
-    [center removeObserver:self
-            name:MMDidDiscoverPeripheralNotification 
-            object:nil];
-    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
-    callbackId:self.scanCommand.callbackId];
+    if (self.scanCommand != nil) {
+        NSLog(@"Did discover device %@",noti);
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        NSDictionary *dic = noti.object;
+        CBPeripheral *pri = dic[@"peripheral"];
+        NSLog(@"Peripheral: %@", pri);
+        NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys: @"name", pri.name, @"address", dic[@"MAC"], nil];
+        NSArray *result = @[device];
+        [center removeObserver:self
+                name:MMDidDiscoverPeripheralNotification 
+                object:nil];
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
+        callbackId:self.scanCommand.callbackId];
+    } else {
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]; 
+        callbackId:command.callbackId];
+    }
 }
 
 - (void)initNotification {
