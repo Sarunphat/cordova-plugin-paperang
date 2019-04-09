@@ -62,7 +62,7 @@
 	NSDictionary *dic = noti.object;
 	CBPeripheral *pri = dic[@"peripheral"];
 	NSLog(@"Peripheral: %@", pri);
-    NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys: @"name", pri.name, @"address", dic[@"MAC"], nil]
+    NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys: @"name", pri.name, @"address", dic[@"MAC"], nil];
     NSArray *result = @[device];
     [center removeObserver:self
             name:MMDidDiscoverPeripheralNotification 
