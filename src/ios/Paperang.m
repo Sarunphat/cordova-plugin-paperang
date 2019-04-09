@@ -23,8 +23,8 @@
         NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
         NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
-        self.base64Image = [command.arguments objectAtIndex:0];
-        self.macAddress = [command.arguments objectAtIndex:1];
+        // self.base64Image = [command.arguments objectAtIndex:0];
+        // self.macAddress = [command.arguments objectAtIndex:1];
 
         [MMSharePrint registWithAppID:[appId longValue]
             AppKey: appKey
