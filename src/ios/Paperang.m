@@ -54,6 +54,7 @@
 
 - (void) scan:(CDVInvokedUrlCommand*)command 
 {
+
     [self.commandDelegate runInBackground:^{
         self.scanCommand = command;
 	    [MMSharePrint startScan];
@@ -66,10 +67,10 @@
         NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys:  pri.name, @"name", dic[@"MAC"], @"address", nil];
         NSArray *result = @[device];
         [self addPeripheral: dic];
-        // [MMSharePrint stopScan];
-        // [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
-        // callbackId:self.scanCommand.callbackId];
-        // self.scanCommand = nil;
+        [MMSharePrint stopScan];
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
+        callbackId:self.scanCommand.callbackId];
+        self.scanCommand = nil;
     } else {
         [MMSharePrint stopScan];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
@@ -118,18 +119,6 @@
         callbackId:self.connectCommand.callbackId];
         self.connectCommand = nil;
     }
-    // NSURL *url = [NSURL URLWithString:self.base64Image];    
-    // NSData *imageData = [NSData dataWithContentsOfURL:url];
-    // UIImage *ret = [UIImage imageWithData:imageData];
-    
-    // [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
-    //     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
-    //     callbackId:self.command.callbackId];
-    // } fail:^(NSError *error){
-    //     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
-    //     callbackId:self.command.callbackId];
-    // }];
-	
 }
 - (void)didFailConnectDevice:(NSNotification *)noti {
 	NSLog(@"Fail to connect to device %@", noti);
@@ -150,6 +139,23 @@
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
     callbackId:self.disconnectCommand.callbackId];
     self.disconnectCommand = nil;
+}
+
+- (void) print: (CDVInvokedUrlCommand*) command {
+    NSLog(@"Print:");
+    [self.commandDelegate runInBackground:^{
+        NSURL *url = [NSURL URLWithString:[command.arguments objectAtIndex:0]];    
+        NSData *imageData = [NSData dataWithContentsOfURL:url];
+        UIImage *ret = [UIImage imageWithData:imageData];
+        
+        [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
+            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
+            callbackId:self.command.callbackId];
+        } fail:^(NSError *error){
+            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
+            callbackId:self.command.callbackId];
+        }];
+    }];
 }
 
 @end
