@@ -31,7 +31,7 @@
             andSecret: appSecret
             success:^{
                 [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] 
-                callbackId:self.command.callbackId];
+                callbackId:command.callbackId];
             } fail:^(NSError *error) {
                 [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR] 
                 callbackId:command.callbackId];
@@ -62,7 +62,7 @@
 	NSDictionary *dic = noti.object;
 	CBPeripheral *pri = dic[@"peripheral"];
 	NSLog(@"Peripheral: %@", pri);
-    NSDictionary *device = @{ name: pri.name, address: dic[@"MAC"]};
+    NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys: @"name", pri.name, @"address", dic[@"MAC"], nil]
     NSArray *result = @[device];
     [center removeObserver:self
             name:MMDidDiscoverPeripheralNotification 
