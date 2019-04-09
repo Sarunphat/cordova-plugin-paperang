@@ -66,8 +66,11 @@
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
         callbackId:self.scanCommand.callbackId];
     } else {
+        [center removeObserver:self
+                name:MMDidDiscoverPeripheralNotification 
+                object:nil];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
-        callbackId:command.callbackId];
+        callbackId:scanCommand.callbackId];
     }
 }
 
