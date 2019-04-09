@@ -53,6 +53,7 @@
         CBPeripheral *pri = dic[@"peripheral"];
         NSDictionary *device = [NSDictionary dictionaryWithObjectsAndKeys:  pri.name, @"name", dic[@"MAC"], @"address", nil];
         NSArray *result = @[device];
+        [MMSharePrint stopScan];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray: result] 
         callbackId:self.scanCommand.callbackId];
     } else {
