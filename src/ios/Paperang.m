@@ -27,8 +27,6 @@
         NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
         NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
-        // self.base64Image = [command.arguments objectAtIndex:0];
-        // self.macAddress = [command.arguments objectAtIndex:1];
         [self initNotification];
         [MMSharePrint registWithAppID:[appId longValue]
             AppKey: appKey
@@ -56,8 +54,11 @@
 {
 
     [self.commandDelegate runInBackground:^{
+
         self.scanCommand = command;
 	    [MMSharePrint startScan];
+        // Create timer to stop scanning
+        [NSTimer scheduledTimerWithTimeInterval: 60 target:self selector(@didStopScanning:) userInfo:nil repeats:NO];
     }];
 }
 - (void) didDiscoverDevice:(NSNotification *)noti {
@@ -68,13 +69,22 @@
         NSArray *result = @[device];
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"scanning", @"state", result, @"deviceList", nil];
         [self addPeripheral: dic];
-        [MMSharePrint stopScan];
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret] 
-        callbackId:self.scanCommand.callbackId];
-        self.scanCommand = nil;
+        CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret];
+        [pluginResult setKeepCallbackAsBool:YES]
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:self.scanCommand.callbackId];
     } else {
         [MMSharePrint stopScan];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
+        callbackId:self.scanCommand.callbackId];
+        self.scanCommand = nil;
+    }
+}
+- (void) didStopScanning: (id) sender {
+    if (self.scanCommand != nil) {
+        [MMSharePrint stopScan];
+        NSArray *result = @[];
+        NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"Scanning complete."]
         callbackId:self.scanCommand.callbackId];
         self.scanCommand = nil;
     }
@@ -125,7 +135,6 @@
 	NSLog(@"Fail to connect to device %@", noti);
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Failed to connect to device."] 
     callbackId:self.connectCommand.callbackId];
-    self.connectCommand = nil;
 }
 
 - (void) disconnect:(CDVInvokedUrlCommand*) command {
