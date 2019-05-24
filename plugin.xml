@@ -9,9 +9,9 @@
         <clobbers target="paperang" />
     </js-module>
 
-    <preference name="APP_ID" />
-    <preference name="APP_KEY" />
-    <preference name="APP_SECRET" />
+    <preference name="APP_ID" value="" />
+    <preference name="APP_KEY" value="" />
+    <preference name="APP_SECRET" value="" />
 
     <platform name="ios">
         <hook type="after_platform_add" src="hooks/embedframework/addEmbedded.js" />
