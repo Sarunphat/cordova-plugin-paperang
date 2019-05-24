@@ -70,7 +70,7 @@
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"scanning", @"state", result, @"deviceList", nil];
         [self addPeripheral: dic];
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret];
-        [pluginResult setKeepCallbackAsBool:YES]
+        [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.scanCommand.callbackId];
     } else {
         [MMSharePrint stopScan];
@@ -84,7 +84,7 @@
         [MMSharePrint stopScan];
         NSArray *result = @[];
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"Scanning complete."]
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
         callbackId:self.scanCommand.callbackId];
         self.scanCommand = nil;
     }
