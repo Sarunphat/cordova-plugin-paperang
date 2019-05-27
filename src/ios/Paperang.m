@@ -20,7 +20,7 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        if (self.registerCommand != nil) {
+        if (self.registerCommand == nil) {
             self.registerCommand = command;
             self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
             NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
