@@ -59,7 +59,7 @@
 	    [MMSharePrint startScan];
         // Create timer to stop scanning
         double delayInSeconds = 5.0;
-        [self performSelector:@selector(didStopScanning) withObject:nil afterDelay: delayInSeconds]
+        [self performSelector:@selector(didStopScanning) withObject:nil afterDelay: delayInSeconds];
     }];
 }
 - (void) didDiscoverDevice:(NSNotification *)noti {
