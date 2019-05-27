@@ -80,6 +80,7 @@
     }
 }
 - (void) didStopScanning: (id) sender {
+    NSLog(@"Stop scanning is called");
     if (self.scanCommand != nil) {
         [MMSharePrint stopScan];
         NSArray *result = @[];
