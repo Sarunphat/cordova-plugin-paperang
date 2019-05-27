@@ -8,6 +8,7 @@
 @property (strong, nonatomic) NSString *base64Image;
 @property (strong, nonatomic) NSString *macAddress;
 @property (strong, nonatomic) NSMutableArray *peripherals;
+@property (strong, nonatomic) CDVInvokedUrlCommand *registerCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *connectCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *disconnectCommand;
@@ -19,25 +20,34 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
-        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-        f.numberStyle = NSNumberFormatterDecimalStyle;
-        
-        NSNumber *appId = [f numberFromString: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppId"]];
-        NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
-        NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
+        if (self.registerCommand != nil) {
+            self.registerCommand = command;
+            self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
+            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            
+            NSNumber *appId = [f numberFromString: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppId"]];
+            NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
+            NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
-        [self initNotification];
-        [MMSharePrint registWithAppID:[appId longValue]
-            AppKey: appKey
-            andSecret: appSecret
-            success:^{
-                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
-                callbackId:command.callbackId];
-            } fail:^(NSError *error) {
-                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Cannot init Bluetooth"] 
-                callbackId:command.callbackId];
-            }];
+            [self initNotification];
+            [MMSharePrint registWithAppID:[appId longValue]
+                AppKey: appKey
+                andSecret: appSecret
+                success:^{
+                    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
+                    callbackId:command.callbackId];
+                    self.registerCommand = nil;
+                } fail:^(NSError *error) {
+                    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Cannot init Bluetooth."] 
+                    callbackId:command.callbackId];
+                    self.registerCommand = nil;
+                }
+            ];
+        } else {
+            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"App is registering."]
+            callbackId:command.callbackId];
+        }
     }];
 }
 
@@ -58,7 +68,7 @@
         self.scanCommand = command;
 	    [MMSharePrint startScan];
         // Create timer to stop scanning
-        double delayInSeconds = 5.0;
+        double delayInSeconds = 60.0;
         dispatch_async(dispatch_get_main_queue(), ^{
             [self performSelector:@selector(didStopScanning:) withObject:nil afterDelay: delayInSeconds];
         });
@@ -79,6 +89,7 @@
         [MMSharePrint stopScan];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
         callbackId:self.scanCommand.callbackId];
+        self.scanCommand = nil;
     }
 }
 - (void) didStopScanning: (id) sender {
@@ -89,6 +100,7 @@
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
         callbackId:self.scanCommand.callbackId];
+        self.scanCommand = nil;
     }
 }
 
@@ -126,15 +138,18 @@
     if(self.connectCommand != nil) {
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
         callbackId:self.connectCommand.callbackId];
+        self.connectCommand = nil;
     } else {
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Connect command is nil."]
         callbackId:self.connectCommand.callbackId];
+        self.connectCommand = nil;
     }
 }
 - (void)didFailConnectDevice:(NSNotification *)noti {
 	NSLog(@"Fail to connect to device %@", noti);
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Failed to connect to device."] 
     callbackId:self.connectCommand.callbackId];
+    self.connectCommand = nil;
 }
 
 - (void) disconnect:(CDVInvokedUrlCommand*) command {
@@ -148,6 +163,7 @@
 	NSLog(@"Disconect device %@", noti);
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
     callbackId:self.disconnectCommand.callbackId];
+    self.disconnectCommand = nil;
 }
 
 - (void) print: (CDVInvokedUrlCommand*) command {
