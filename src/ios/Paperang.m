@@ -58,7 +58,12 @@
         self.scanCommand = command;
 	    [MMSharePrint startScan];
         // Create timer to stop scanning
-        [NSTimer scheduledTimerWithTimeInterval: 5 target:self selector:@selector(didStopScanning:) userInfo:nil repeats:NO];
+        double delayInSeconds = 5.0;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            NSLog(@"Do some work");
+            [self didStopScanning];
+        });
     }];
 }
 - (void) didDiscoverDevice:(NSNotification *)noti {
