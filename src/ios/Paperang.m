@@ -95,7 +95,7 @@
         NSLog(@"Scan callbackId Result: %@", self.scanCommand.callbackId);
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
         callbackId:self.scanCommand.callbackId];
-        self.scanCommand = nil
+        self.scanCommand = nil;
     }
 }
 - (void) didStopScanning: (id) sender {
@@ -106,7 +106,7 @@
         NSLog(@"Scan callbackId Result: %@", self.scanCommand.callbackId);
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
         callbackId:self.scanCommand.callbackId];
-        self.scanCommand = nil
+        self.scanCommand = nil;
     }
 }
 
