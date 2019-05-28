@@ -89,7 +89,6 @@
         [MMSharePrint stopScan];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Scan command is nil."]
         callbackId:self.scanCommand.callbackId];
-        self.scanCommand = nil;
     }
 }
 - (void) didStopScanning: (id) sender {
@@ -99,7 +98,6 @@
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
         callbackId:self.scanCommand.callbackId];
-        self.scanCommand = nil;
     }
 }
 
@@ -136,17 +134,14 @@
     if(self.connectCommand != nil) {
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
         callbackId:self.connectCommand.callbackId];
-        self.connectCommand = nil;
     } else {
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Connect command is nil."]
         callbackId:self.connectCommand.callbackId];
-        self.connectCommand = nil;
     }
 }
 - (void)didFailConnectDevice:(NSNotification *)noti {
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Failed to connect to device."] 
     callbackId:self.connectCommand.callbackId];
-    self.connectCommand = nil;
 }
 
 - (void) disconnect:(CDVInvokedUrlCommand*) command {
@@ -158,7 +153,6 @@
 - (void)didDisconnectDevice:(NSNotification *)noti {
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
     callbackId:self.disconnectCommand.callbackId];
-    self.disconnectCommand = nil;
 }
 
 - (void) print: (CDVInvokedUrlCommand*) command {
