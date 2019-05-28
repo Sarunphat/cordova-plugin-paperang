@@ -20,34 +20,27 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        if (self.registerCommand == nil) {
-            self.registerCommand = command;
-            self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
-            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-            f.numberStyle = NSNumberFormatterDecimalStyle;
-            
-            NSNumber *appId = [f numberFromString: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppId"]];
-            NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
-            NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
+        self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
+        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+        f.numberStyle = NSNumberFormatterDecimalStyle;
+        
+        NSNumber *appId = [f numberFromString: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppId"]];
+        NSString* appKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppKey"];
+        NSString* appSecret = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"PAPERANG_AppSecret"];
 
-            [self initNotification];
-            [MMSharePrint registWithAppID:[appId longValue]
-                AppKey: appKey
-                andSecret: appSecret
-                success:^{
-                    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
-                    callbackId:command.callbackId];
-                    self.registerCommand = nil;
-                } fail:^(NSError *error) {
-                    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Cannot init Bluetooth."] 
-                    callbackId:command.callbackId];
-                    self.registerCommand = nil;
-                }
-            ];
-        } else {
-            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"App is registering."]
-            callbackId:command.callbackId];
-        }
+        [self initNotification];
+        [MMSharePrint registWithAppID:[appId longValue]
+            AppKey: appKey
+            andSecret: appSecret
+            success:^{
+                [MMSharePrint autoReconnect: NO];
+                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
+                callbackId:command.callbackId];
+            } fail:^(NSError *error) {
+                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Cannot init Bluetooth."] 
+                callbackId:command.callbackId];
+            }
+        ];
     }];
 }
 
@@ -151,8 +144,10 @@
     }];
 }
 - (void)didDisconnectDevice:(NSNotification *)noti {
-    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
-    callbackId:self.disconnectCommand.callbackId];
+    [self.commandDelegate runInBackground:^{
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
+        callbackId:self.disconnectCommand.callbackId];
+    }];
 }
 
 - (void) print: (CDVInvokedUrlCommand*) command {
