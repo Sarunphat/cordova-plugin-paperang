@@ -93,7 +93,6 @@
     }
 }
 - (void) didStopScanning: (id) sender {
-    NSLog(@"Stop scanning is called");
     if (self.scanCommand != nil) {
         [MMSharePrint stopScan];
         NSArray *result = @[];
@@ -134,7 +133,6 @@
     }];
 }
 - (void)didConnectDevice:(NSNotification *)noti {
-	NSLog(@"connect success: %@", noti);
     if(self.connectCommand != nil) {
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
         callbackId:self.connectCommand.callbackId];
@@ -146,32 +144,29 @@
     }
 }
 - (void)didFailConnectDevice:(NSNotification *)noti {
-	NSLog(@"Fail to connect to device %@", noti);
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Failed to connect to device."] 
     callbackId:self.connectCommand.callbackId];
     self.connectCommand = nil;
 }
 
 - (void) disconnect:(CDVInvokedUrlCommand*) command {
-	NSLog(@"Disconect:");
     [self.commandDelegate runInBackground:^{
         self.disconnectCommand = command;
         [MMSharePrint disconnect];
     }];
 }
 - (void)didDisconnectDevice:(NSNotification *)noti {
-	NSLog(@"Disconect device %@", noti);
     [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
     callbackId:self.disconnectCommand.callbackId];
     self.disconnectCommand = nil;
 }
 
 - (void) print: (CDVInvokedUrlCommand*) command {
-    NSLog(@"Print:");
     [self.commandDelegate runInBackground:^{
         NSURL *url = [NSURL URLWithString:[command.arguments objectAtIndex:0]];    
         NSData *imageData = [NSData dataWithContentsOfURL:url];
         UIImage *ret = [UIImage imageWithData:imageData];
+        NSLog(@"Print imageData: %@", imageData);
         
         [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
             [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
