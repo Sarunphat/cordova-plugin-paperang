@@ -11,7 +11,7 @@
 @property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *connectCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *disconnectCommand;
-@property (strong, nonatomic) CDVInvokedUrlCommand *printCommand;
+// @property (strong, nonatomic) CDVInvokedUrlCommand *printCommand;
 
 @end
 
@@ -50,7 +50,7 @@
 	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
     [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
 	[center addObserver:self selector:@selector(didDisconnectDevice:) name:MMDidDisconnectPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(didFinishPrint:) name:MMDidFinishPrintNotification object:nil];
+	// [center addObserver:self selector:@selector(didFinishPrint:) name:MMDidFinishPrintNotification object:nil];
 }
 
 - (void) scan:(CDVInvokedUrlCommand*)command 
@@ -157,7 +157,8 @@
         NSLog(@"Print imageData: %@", [command.arguments objectAtIndex:0]);
         
         [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
-            NSLog(@"Complete send data.");
+            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
+            callbackId:command.callbackId];
         } fail:^(NSError *error){
             NSLog(@"Error: %@", error);
             [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Data send failed"]
@@ -166,14 +167,14 @@
     }];
 }
 
-- (void) didFinishPrint: (NSNotification *) noti {
-    if(self.printCommand != nil) {
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
-        callbackId:self.printCommand.callbackId];
-    } else {
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Print command is nil."]
-        callbackId:self.printCommand.callbackId];
-    }
-}
+// - (void) didFinishPrint: (NSNotification *) noti {
+//     if(self.printCommand != nil) {
+//         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
+//         callbackId:self.printCommand.callbackId];
+//     } else {
+//         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Print command is nil."]
+//         callbackId:self.printCommand.callbackId];
+//     }
+// }
 
 @end
