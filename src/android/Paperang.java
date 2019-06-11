@@ -190,13 +190,19 @@ public class Paperang extends CordovaPlugin {
         PaperangApi.sendImgToBT(mContext, decodedByte, new OnBtDeviceListener() {
             @Override
             public void onBtDataSendFinish() {
-                callbackContext.success();
+                // callbackContext.success();
             }
 
             @Override
             public void onBtDataSendFailed(final int code, final String msg) {
                 callbackContext.error("Data send failed.");
             }
+
+            @Override
+            public void onBtDataPrintFinish() {
+                callbackContext.success();
+            }
+            
         });
     }
 

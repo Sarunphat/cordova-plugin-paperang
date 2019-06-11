@@ -50,6 +50,7 @@
 	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
     [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
 	[center addObserver:self selector:@selector(didDisconnectDevice:) name:MMDidDisconnectPeripheralNotification object:nil];
+	[center addObserver:self selector:@selector(didFinishPrint:) name:MMDidFinishPrintNotification object:nil];
 }
 
 - (void) scan:(CDVInvokedUrlCommand*)command 
@@ -153,16 +154,26 @@
         NSURL *url = [NSURL URLWithString:[command.arguments objectAtIndex:0]];    
         NSData *imageData = [NSData dataWithContentsOfURL:url];
         UIImage *ret = [UIImage imageWithData:imageData];
-        NSLog(@"Print imageData: %@", imageData);
+        NSLog(@"Print imageData: %@", [command.arguments objectAtIndex:0]);
         
         [MMSharePrint printImage:ret printType:PrintTypeForImage completeSendData:^{
-            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
-            callbackId:self.printCommand.callbackId];
+            NSLog(@"Complete send data.");
         } fail:^(NSError *error){
-            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Data send failed."]
-            callbackId:self.printCommand.callbackId];
+            NSLog(@"Error: %@", error);
+            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Data send failed"]
+            callbackId:command.callbackId];
         }];
     }];
+}
+
+- (void) didFinishPrint: (NSNotification *) noti {
+    if(self.printCommand != nil) {
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
+        callbackId:self.printCommand.callbackId];
+    } else {
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Print command is nil."]
+        callbackId:self.printCommand.callbackId];
+    }
 }
 
 @end
