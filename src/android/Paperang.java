@@ -199,10 +199,9 @@ public class Paperang extends CordovaPlugin {
             }
 
             @Override
-            public void onBtDataPrintFinish() {
+            public void onBtPrintFinish() {
                 callbackContext.success();
             }
-            
         });
     }
 
