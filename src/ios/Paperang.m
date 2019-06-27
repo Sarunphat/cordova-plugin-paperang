@@ -11,7 +11,7 @@
 @property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *connectCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *disconnectCommand;
-// @property (strong, nonatomic) CDVInvokedUrlCommand *printCommand;
+@property (strong, nonatomic) CDVInvokedUrlCommand *printCommand;
 
 @end
 
