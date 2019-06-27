@@ -129,8 +129,13 @@
     [self.commandDelegate runInBackground:^{
         self.connectCommand = command;
         NSDictionary* dict = [self getPeripheral: [command.arguments objectAtIndex:0]];
-        CBPeripheral *pri = dict[@"peripheral"];
-        [MMSharePrint connectPeripheral:pri];
+        if (dict == nil) {
+            [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Peripheral is not found."]
+            callbackId:self.connectCommand.callbackId];
+        } else {
+            CBPeripheral *pri = dict[@"peripheral"];
+            [MMSharePrint connectPeripheral:pri];
+        }
     }];
 }
 - (void)didConnectDevice:(NSNotification *)noti {
