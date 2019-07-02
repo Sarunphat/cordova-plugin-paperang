@@ -50,7 +50,6 @@
 	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
     [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
 	[center addObserver:self selector:@selector(didDisconnectDevice:) name:MMDidDisconnectPeripheralNotification object:nil];
-	// [center addObserver:self selector:@selector(didFinishPrint:) name:MMDidFinishPrintNotification object:nil];
 }
 
 - (void) scan:(CDVInvokedUrlCommand*)command 
@@ -113,6 +112,10 @@
     return nil;
 }
 
+- (void) removeAllPeripheral {
+    [self.peripherals removeAllObjects];
+}
+
 - (void) connect:(CDVInvokedUrlCommand*) command {
     [self.commandDelegate runInBackground:^{
         self.connectCommand = command;
@@ -148,6 +151,7 @@
 }
 - (void)didDisconnectDevice:(NSNotification *)noti {
     [self.commandDelegate runInBackground:^{
+        [self removeAllPeripheral];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
         callbackId:self.disconnectCommand.callbackId];
     }];
@@ -171,15 +175,5 @@
         }];
     }];
 }
-
-// - (void) didFinishPrint: (NSNotification *) noti {
-//     if(self.printCommand != nil) {
-//         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
-//         callbackId:self.printCommand.callbackId];
-//     } else {
-//         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Print command is nil."]
-//         callbackId:self.printCommand.callbackId];
-//     }
-// }
 
 @end
