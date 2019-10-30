@@ -20,7 +20,8 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
+        //self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
+        self.peripherals = [[NSMutableArray alloc] init];
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         
@@ -99,10 +100,11 @@
             break;
         }
     }
-  //  if (!isAdded) {
-    //    [self.peripherals addObject:peri];
-    //}
-    [self.peripherals addObject:peri];
+
+    if (!isAdded) {
+        [self.peripherals addObject:peri];
+    }
+    
 }
 - (NSDictionary*) getPeripheral: (NSString *) mac {
     for (NSDictionary* p in self.peripherals) {
