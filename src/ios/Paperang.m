@@ -90,7 +90,7 @@
         callbackId:self.scanCommand.callbackId];
     }
 }
-
+//ตรวจสอบรายการ device ที่สแกน
 - (void) addPeripheral:(NSDictionary *) peri {
     bool isAdded = false;
     for (NSDictionary* p in self.peripherals) {
@@ -99,9 +99,10 @@
             break;
         }
     }
-    if (!isAdded) {
-        [self.peripherals addObject:peri];
-    }
+  //  if (!isAdded) {
+    //    [self.peripherals addObject:peri];
+    //}
+    [self.peripherals addObject:peri];
 }
 - (NSDictionary*) getPeripheral: (NSString *) mac {
     for (NSDictionary* p in self.peripherals) {
