@@ -8,6 +8,7 @@
 @property (strong, nonatomic) NSString *base64Image;
 @property (strong, nonatomic) NSString *macAddress;
 @property (strong, nonatomic) NSMutableArray *peripherals;
+@property (strong, nonatomic, retain) NSMutableArray *allDevice;
 @property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *connectCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *disconnectCommand;
@@ -20,8 +21,8 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        //self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
         self.peripherals = [[NSMutableArray alloc] init];
+        self.allDevice = [[NSMutableArray alloc] init];
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         
@@ -73,6 +74,7 @@
         NSArray *result = @[device];
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"scanning", @"state", result, @"deviceList", nil];
         [self addPeripheral: dic];
+        [self addDeviceToList:device];
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.scanCommand.callbackId];
@@ -85,7 +87,7 @@
 - (void) didStopScanning: (id) sender {
     if (self.scanCommand != nil) {
         [MMSharePrint stopScan];
-        NSArray *result = @[];
+        NSArray *result = self.allDevice;
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
         callbackId:self.scanCommand.callbackId];
@@ -117,6 +119,17 @@
 
 - (void) removeAllPeripheral {
     [self.peripherals removeAllObjects];
+}
+
+- (void) addDeviceToList : (NSDictionary *) device {
+    NSArray *allValue = self.deviceList.allValue;
+    if (![allValue containsObject:[device objectForKey:@"address"]]) {
+        [self.deviceList addObject:device];
+    }
+}
+
+- (NSArray *) getAllDevice {
+    return self.allDevice;
 }
 
 - (void) connect:(CDVInvokedUrlCommand*) command {
@@ -177,6 +190,10 @@
             callbackId:command.callbackId];
         }];
     }];
+}
+
+- (void)clearDeviceList:(CDVInvokedUrlCommand*) command{
+    [self.allDevice removeAllObjects];
 }
 
 @end
