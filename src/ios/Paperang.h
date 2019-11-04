@@ -7,6 +7,5 @@
 - (void)connect:(CDVInvokedUrlCommand*) command;
 - (void)disconnect:(CDVInvokedUrlCommand*) command;
 - (void)print:(CDVInvokedUrlCommand*) command;
-- (void)clearDeviceList:(CDVInvokedUrlCommand*) command;
 
 @end
