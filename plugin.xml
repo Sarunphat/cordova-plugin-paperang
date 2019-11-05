@@ -36,7 +36,7 @@
         <header-file src="src/ios/Paperang.h" />
         <source-file src="src/ios/Paperang.m" />
         <header-file src="src/ios/ShareDeviceInstance.h" />
-        <source-file src="src/ios/ShareDeviceInstance.h" />
+        <source-file src="src/ios/ShareDeviceInstance.m" />
             
         <framework src="src/ios/MMApi.framework" custom="true" />
     </platform>
