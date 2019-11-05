@@ -36,10 +36,10 @@
             andSecret: appSecret
             success:^{
                 [MMSharePrint autoReconnect: NO];
-                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
+                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
                 callbackId:command.callbackId];
             } fail:^(NSError *error) {
-                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Cannot init Bluetooth."] 
+                [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Cannot init Bluetooth."]
                 callbackId:command.callbackId];
             }
         ];
@@ -47,18 +47,18 @@
 }
 
 - (void)initNotification {
-	NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-	[center addObserver:self selector:@selector(didDiscoverDevice:) name:MMDidDiscoverPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center addObserver:self selector:@selector(didDiscoverDevice:) name:MMDidDiscoverPeripheralNotification object:nil];
+    [center addObserver:self selector:@selector(didConnectDevice:) name:MMDidConnectPeripheralNotification object:nil];
     [center addObserver:self selector:@selector(didFailConnectDevice:) name:MMDidFailToConnectPeripheralNotification object:nil];
-	[center addObserver:self selector:@selector(didDisconnectDevice:) name:MMDidDisconnectPeripheralNotification object:nil];
+    [center addObserver:self selector:@selector(didDisconnectDevice:) name:MMDidDisconnectPeripheralNotification object:nil];
 }
 
-- (void) scan:(CDVInvokedUrlCommand*)command 
+- (void) scan:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
         self.scanCommand = command;
-	    [MMSharePrint startScan];
+        [MMSharePrint startScan];
         // Create timer to stop scanning
         double delayInSeconds = 60.0;
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -87,6 +87,11 @@
 - (void) didStopScanning: (id) sender {
     if (self.scanCommand != nil) {
         [MMSharePrint stopScan];
+        NSArray *result = self.allDevice;
+        NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
+        callbackId:self.scanCommand.callbackId];
+    }else{
         NSArray *result = self.allDevice;
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
@@ -122,9 +127,15 @@
 }
 
 - (void) addDeviceToList : (NSDictionary *) device {
-    NSArray *allValue = self.deviceList.allValue;
-    if (![allValue containsObject:[device objectForKey:@"address"]]) {
-        [self.deviceList addObject:device];
+    bool isAdded = false;
+    for (NSDictionary *tempDevice in self.allDevice) {
+        if (tempDevice[@"address"] == device[@"address"]) {
+            isAdded = true;
+            break;
+        }
+    }
+    if (!isAdded) {
+        [self.allDevice addObject:device];
     }
 }
 
@@ -155,7 +166,7 @@
     }
 }
 - (void)didFailConnectDevice:(NSNotification *)noti {
-    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Failed to connect to device."] 
+    [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString: @"Failed to connect to device."]
     callbackId:self.connectCommand.callbackId];
 }
 
@@ -168,7 +179,7 @@
 - (void)didDisconnectDevice:(NSNotification *)noti {
     [self.commandDelegate runInBackground:^{
         [self removeAllPeripheral];
-        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"] 
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString: @"success"]
         callbackId:self.disconnectCommand.callbackId];
     }];
 }
@@ -176,7 +187,7 @@
 - (void) print: (CDVInvokedUrlCommand*) command {
     [self.commandDelegate runInBackground:^{
         self.printCommand = command;
-        NSURL *url = [NSURL URLWithString:[command.arguments objectAtIndex:0]];    
+        NSURL *url = [NSURL URLWithString:[command.arguments objectAtIndex:0]];
         NSData *imageData = [NSData dataWithContentsOfURL:url];
         UIImage *ret = [UIImage imageWithData:imageData];
         NSLog(@"Print imageData: %@", [command.arguments objectAtIndex:0]);
@@ -196,4 +207,11 @@
     [self.allDevice removeAllObjects];
 }
 
+
+- (void) getCurrentDeviceList:(CDVInvokedUrlCommand *) command{
+    NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"alldevice", @"state", self.allDevice, @"deviceList", nil];
+    CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret];
+    [pluginResult setKeepCallbackAsBool:YES];
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
 @end
