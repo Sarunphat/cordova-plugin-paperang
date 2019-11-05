@@ -207,7 +207,8 @@
     [self.allDevice removeAllObjects];
 }
 
-- (void) getDeviceList:(CDVInvokedUrlCommand *) command{
+
+- (void) getCurrentDeviceList:(CDVInvokedUrlCommand *) command{
     NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"alldevice", @"state", self.allDevice, @"deviceList", nil];
     CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret];
     [pluginResult setKeepCallbackAsBool:YES];
