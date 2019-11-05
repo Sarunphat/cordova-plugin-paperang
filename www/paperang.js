@@ -40,5 +40,13 @@ window.PaperangAPI = {
             "print",
             [base64Image]
         );
-    }
+    },
+    getDeviceList: (successCallback, errorCallback) => {
+        cordova.exec(
+            successCallback,
+            errorCallback,
+            "Paperang",
+            "alldevice"
+        );
+    },
 }
