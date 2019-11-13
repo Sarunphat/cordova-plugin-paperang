@@ -2,12 +2,14 @@
 #import <Cordova/CDVPlugin.h>
 #import <MMApi/MMApi.h>
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "ShareDeviceInstance.h"
 
 @interface Paperang ()
 
 @property (strong, nonatomic) NSString *base64Image;
 @property (strong, nonatomic) NSString *macAddress;
-@property (strong, nonatomic) NSMutableArray *peripherals;
+//@property (strong, nonatomic) NSMutableArray *peripherals;
+//@property (strong, nonatomic, retain) NSMutableArray *allDevice;
 @property (strong, nonatomic) CDVInvokedUrlCommand *scanCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *connectCommand;
 @property (strong, nonatomic) CDVInvokedUrlCommand *disconnectCommand;
@@ -20,7 +22,6 @@
 - (void) register:(CDVInvokedUrlCommand*)command
 {
     [self.commandDelegate runInBackground:^{
-        self.peripherals = [[NSMutableArray alloc] initWithCapacity: 1];
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         
@@ -72,6 +73,7 @@
         NSArray *result = @[device];
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"scanning", @"state", result, @"deviceList", nil];
         [self addPeripheral: dic];
+        [self addDeviceToList:device];
         CDVPluginResult* pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret];
         [pluginResult setKeepCallbackAsBool:YES];
         [self.commandDelegate sendPluginResult:pluginResult callbackId:self.scanCommand.callbackId];
@@ -84,27 +86,32 @@
 - (void) didStopScanning: (id) sender {
     if (self.scanCommand != nil) {
         [MMSharePrint stopScan];
-        NSArray *result = @[];
+        NSArray *result = [ShareDeviceInstance sharedInstance].allDevice;
         NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
         [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
         callbackId:self.scanCommand.callbackId];
-    }
+	} else {
+        NSArray *result = [ShareDeviceInstance sharedInstance].allDevice;
+        NSDictionary *ret = [NSDictionary dictionaryWithObjectsAndKeys: @"finished", @"state", result, @"deviceList", nil];
+        [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary: ret]
+        callbackId:self.scanCommand.callbackId];
+	}
 }
 
 - (void) addPeripheral:(NSDictionary *) peri {
     bool isAdded = false;
-    for (NSDictionary* p in self.peripherals) {
+    for (NSDictionary* p in [ShareDeviceInstance sharedInstance].peripherals) {
         if ([p[@"MAC"] isEqualToString: peri[@"MAC"]]) {
             isAdded = true;
             break;
         }
     }
     if (!isAdded) {
-        [self.peripherals addObject:peri];
+        [[ShareDeviceInstance sharedInstance].peripherals addObject:peri];
     }
 }
 - (NSDictionary*) getPeripheral: (NSString *) mac {
-    for (NSDictionary* p in self.peripherals) {
+    for (NSDictionary* p in [ShareDeviceInstance sharedInstance].peripherals) {
         if ([p[@"MAC"] isEqualToString: mac]) {
             return p;
         }
@@ -113,7 +120,24 @@
 }
 
 - (void) removeAllPeripheral {
-    [self.peripherals removeAllObjects];
+    [[ShareDeviceInstance sharedInstance].peripherals removeAllObjects];
+}
+
+- (void) addDeviceToList : (NSDictionary *) device {
+    bool isAdded = false;
+    for (NSDictionary *tempDevice in [ShareDeviceInstance sharedInstance].allDevice) {
+        if (tempDevice[@"address"] == device[@"address"]) {
+            isAdded = true;
+            break;
+        }
+    }
+    if (!isAdded) {
+        [[ShareDeviceInstance sharedInstance].allDevice addObject:device];
+    }
+}
+
+- (NSArray *) getAllDevice {
+    return [ShareDeviceInstance sharedInstance].allDevice;
 }
 
 - (void) connect:(CDVInvokedUrlCommand*) command {
