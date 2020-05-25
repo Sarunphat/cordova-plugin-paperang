@@ -173,7 +173,7 @@ public class Paperang extends CordovaPlugin {
 
             @Override
             public void onBtConnFailed(final int code, final String msg) {
-                callbackContext.error("Connect Bluetooth failed.");
+                callbackContext.error("Connect Bluetooth failed [" + code +"]: " + msg);
             }
 
             @Override
