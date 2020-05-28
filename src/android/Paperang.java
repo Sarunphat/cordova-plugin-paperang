@@ -20,12 +20,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.paperang.sdk.btclient.callback.OnInitStatusListener;
-import cn.paperang.sdk.btclient.callback.OnBtDeviceListener;
-import cn.paperang.sdk.btclient.callback.OnBtStatusChangeListener;
-import cn.paperang.sdk.btclient.model.PaperangDevice;
-import cn.paperang.sdk.client.PaperangApi;
-import cn.paperang.sdk.client.errcode.DevConnStatus;
+import com.paperang.sdk.btclient.callback.OnInitStatusListener;
+import com.paperang.sdk.btclient.callback.OnBtDeviceListener;
+import com.paperang.sdk.btclient.callback.OnBtStatusChangeListener;
+import com.paperang.sdk.btclient.model.PaperangDevice;
+import com.paperang.sdk.client.PaperangApi;
+import com.paperang.sdk.client.errcode.DevConnStatus;
 
 /**
  * This class call Paperang API
