@@ -20,12 +20,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.paperang.sdk.btclient.callback.OnInitStatusListener;
-import com.paperang.sdk.btclient.callback.OnBtDeviceListener;
-import com.paperang.sdk.btclient.callback.OnBtStatusChangeListener;
-import com.paperang.sdk.btclient.model.PaperangDevice;
 import com.paperang.sdk.client.PaperangApi;
-import com.paperang.sdk.client.errcode.DevConnStatus;
+import com.paperang.sdk.device.PaperangDevice;
+import com.paperang.sdk.printer.callback.OnDevConnStatusListener;
+import com.paperang.sdk.printer.callback.OnDevFoundListener;
+import com.paperang.sdk.printer.callback.OnDevPrintStatusListener;
 
 /**
  * This class call Paperang API
@@ -126,9 +125,9 @@ public class Paperang extends CordovaPlugin {
 
     private void scan(CallbackContext callbackContext) {
         PaperangApi.setAutoConnect(true);
-        PaperangApi.searchBT(new OnBtDeviceListener() {
+        PaperangApi.searchBT(new OnDevFoundListener() {
             @Override
-            public void onBtFound(List<PaperangDevice> deviceList) {
+            public void onDevFound(List<PaperangDevice> deviceList) {
                 try {
                     JSONObject result = new JSONObject();
                     JSONArray resultDevices = new JSONArray();
@@ -150,7 +149,7 @@ public class Paperang extends CordovaPlugin {
             }
 
             @Override
-            public void onDiscoveryTimeout() {
+            public void onDevFoundTimeout() {
                 try {
                     JSONObject result = new JSONObject();
                     JSONArray resultDevices = new JSONArray();
@@ -160,24 +159,25 @@ public class Paperang extends CordovaPlugin {
                 } catch (JSONException e) {
                     callbackContext.error(e.toString());
                 }
+                super.onDevFoundTimeout();
             }
         }, 30000);
     }
 
     private void connect(String macAddress, CallbackContext callbackContext) {
-        PaperangApi.connBT(macAddress, 10000, new OnBtDeviceListener() {
+        PaperangApi.connBT(macAddress, 10000, new OnDevConnStatusListener() {
             @Override
-            public void onBtConnSuccess(final BluetoothDevice device, final int code) {
+            public void onDevConnSuccess(final BluetoothDevice device, final int code) {
                 callbackContext.success();
             }
 
             @Override
-            public void onBtConnFailed(final int code, final String msg) {
+            public void onDevConnFailed(final int code, final String msg) {
                 callbackContext.error("Connect Bluetooth failed [" + code +"]: " + msg);
             }
 
             @Override
-            public void onBtConnTimeout() {
+            public void onDevConnTimeout() {
                 callbackContext.error("Connect Bluetooth timeout.");
             }
         });
@@ -187,14 +187,14 @@ public class Paperang extends CordovaPlugin {
         String base64String = base64Image.split(",")[1];
         byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        PaperangApi.sendImgToBT(mContext, decodedByte, new OnBtDeviceListener() {
+        PaperangApi.sendImgToBT(mContext, decodedByte, new OnDevPrintStatusListener() {
             @Override
-            public void onBtDataSendFinish() {
+            public void onDevDataSendFinish() {
                 callbackContext.success();
             }
 
             @Override
-            public void onBtDataSendFailed(final int code, final String msg) {
+            public void onDevDataSendFailed(final int code, final String msg) {
                 callbackContext.error("Data send failed.");
             }
         });
