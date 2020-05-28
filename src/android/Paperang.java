@@ -160,7 +160,6 @@ public class Paperang extends CordovaPlugin {
                 } catch (JSONException e) {
                     callbackContext.error(e.toString());
                 }
-                super.onDevFoundTimeout();
             }
         });
     }
@@ -198,7 +197,7 @@ public class Paperang extends CordovaPlugin {
             public void onDevDataSendFailed(final int code, final String msg) {
                 callbackContext.error("Data send failed.");
             }
-        }, 1);
+        }, 10000);
     }
 
     private void disconnect (CallbackContext callbackContext) {
