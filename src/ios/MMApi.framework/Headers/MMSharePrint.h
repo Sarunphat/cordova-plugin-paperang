@@ -15,13 +15,6 @@ typedef NS_ENUM(NSInteger, PrintType) {
     PrintTypeForText        //黑白二打印模式
 };
 
-typedef NS_ENUM(NSInteger, DensityType) {
-    DensityTypeLight = 0,
-    DensityTypeNormal,
-    DensityTypeStrong,
-};
-
-
 /**
  发现Paperang设备通知，带有设备对象
  {
@@ -74,11 +67,6 @@ UIKIT_EXTERN NSNotificationName const MMDidDisconnectPeripheralNotification;
  将要发送数据通知
  */
 UIKIT_EXTERN NSNotificationName const MMWillSendDataNotification;
-
-/**
- 发送数据进度通知
- */
-UIKIT_EXTERN NSNotificationName const MMSendDataProgressNotification;
 
 /**
  发送数据完成通知
@@ -229,28 +217,5 @@ UIKIT_EXTERN NSNotificationName const MMDeviceExceptionStatusNotification;
          printType:(PrintType)type
   completeSendData:(void (^)(void))complete
               fail:(void (^)(NSError *error))fail;
-
-/**
- 打印图片对象 带份数
- 
- @param image 图片对象
- @param type 打印类型，详见PrintType
- @param count 打印份数
- @param complete 开始发送数据回调
- @param fail 发送数据失败回调
- */
-+ (void)printImage:(UIImage *)image
-         printType:(PrintType)type
-             count:(NSInteger)count
-  completeSendData:(void (^)(void))complete
-              fail:(void (^)(NSError *))fail;
-
-/**
- 设置打印浓度
- 
- @param density 浓度
- 
- */
-+ (void)setDensity:(DensityType)density;
 
 @end

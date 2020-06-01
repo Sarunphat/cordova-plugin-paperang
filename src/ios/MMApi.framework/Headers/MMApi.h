@@ -9,6 +9,5 @@
 #import <UIKit/UIKit.h>
 
 #import <MMApi/MMSharePrint.h>
-#import <MMApi/MMImageTool.h>
 
 
