@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.paperang.sdk.client.PaperangApi;
-import com.paperang.sdk.client.callback.OnInitStatusListener;
 import com.paperang.sdk.device.PaperangDevice;
 import com.paperang.sdk.printer.callback.OnDevConnStatusListener;
 import com.paperang.sdk.printer.callback.OnDevFoundListener;
@@ -198,7 +197,7 @@ public class Paperang extends CordovaPlugin {
             public void onDevDataSendFailed(final int code, final String msg) {
                 callbackContext.error("Data send failed.");
             }
-        }, 1);
+        });
     }
 
     private void disconnect (CallbackContext callbackContext) {
