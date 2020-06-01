@@ -162,7 +162,7 @@ public class Paperang extends CordovaPlugin {
                 }
                 super.onDevFoundTimeout();
             }
-        });
+        }, 30000);
     }
 
     private void connect(String macAddress, CallbackContext callbackContext) {
