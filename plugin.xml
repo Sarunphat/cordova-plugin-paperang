@@ -63,16 +63,16 @@
         <framework src="com.google.code.gson:gson:2.8.5" />
         <framework src="com.squareup.okhttp3:okhttp:3.11.0" />
 
-        <resource-file src="src/android/jniLibs/arm64-v8a/libimg_proc_core.so" target="jniLibs/arm64-v8a/libimg_proc_core.so" />
-        <resource-file src="src/android/jniLibs/arm64-v8a/libmmj_img_alg_core.so" target="jniLibs/arm64-v8a/libmmj_img_alg_core.so" />
-        <resource-file src="src/android/jniLibs/armeabi-v7a/libimg_proc_core.so" target="jniLibs/armeabi-v7a/libimg_proc_core.so" />
-        <resource-file src="src/android/jniLibs/armeabi-v7a/libmmj_img_alg_core.so" target="jniLibs/armeabi-v7a/libmmj_img_alg_core.so" />
-        <resource-file src="src/android/jniLibs/x86/libimg_proc_core.so" target="jniLibs/x86/libimg_proc_core.so" />
-        <resource-file src="src/android/jniLibs/x86/libmmj_img_alg_core.so" target="jniLibs/x86/libmmj_img_alg_core.so" />
-        <resource-file src="src/android/jniLibs/x86_64/libimg_proc_core.so" target="jniLibs/x86_64/libimg_proc_core.so" />
-        <resource-file src="src/android/jniLibs/x86_64/libmmj_img_alg_core.so" target="jniLibs/x86_64/libmmj_img_alg_core.so" />
+        <resource-file src="src/android/jniLibs/arm64-v8a/libalf_h_sdkcore.so" target="jniLibs/arm64-v8a/libalf_h_sdkcore.so" />
+        <resource-file src="src/android/jniLibs/arm64-v8a/libimg_proc_sdkcore.so" target="jniLibs/arm64-v8a/libimg_proc_sdkcore.so" />
+        <resource-file src="src/android/jniLibs/armeabi-v7a/libalf_h_sdkcore.so" target="jniLibs/armeabi-v7a/libalf_h_sdkcore.so" />
+        <resource-file src="src/android/jniLibs/armeabi-v7a/libimg_proc_sdkcore.so" target="jniLibs/armeabi-v7a/libimg_proc_sdkcore.so" />
+        <resource-file src="src/android/jniLibs/armeabi/libalf_h_sdkcore.so" target="jniLibs/armeabi/libalf_h_sdkcore.so" />
+        <resource-file src="src/android/jniLibs/armeabi/libimg_proc_sdkcore.so" target="jniLibs/armeabi/libimg_proc_sdkcore.so" />
+        <resource-file src="src/android/jniLibs/x86/libalf_h_sdkcore.so" target="jniLibs/x86/libalf_h_sdkcore.so" />
+        <resource-file src="src/android/jniLibs/x86/libimg_proc_sdkcore.so" target="jniLibs/x86/libimg_proc_sdkcore.so" />
         
-        <lib-file src="src/android/Paperang_Printcore_V1.1.9.jar" />
+        <lib-file src="src/android/paperang_printcore_1_0_8.jar" />
 
         <source-file src="src/android/Paperang.java" target-dir="src/com/mfec/paperang" />
     </platform>
